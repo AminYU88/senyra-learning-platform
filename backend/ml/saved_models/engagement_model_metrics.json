@@ -1,0 +1,195 @@
+{
+  "best_model_name": "Logistic Regression",
+  "model_results": {
+    "Logistic Regression": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "Random Forest": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "Gradient Boosting": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "Decision Tree": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "grade_band_B",
+      "importance": 0.29352
+    },
+    {
+      "feature": "discussion",
+      "importance": 0.26256
+    },
+    {
+      "feature": "announcements_view",
+      "importance": 0.2346
+    },
+    {
+      "feature": "grade_band_A",
+      "importance": 0.21296
+    },
+    {
+      "feature": "parent_satisfaction",
+      "importance": 0.20275
+    },
+    {
+      "feature": "visited_resources",
+      "importance": 0.20274
+    },
+    {
+      "feature": "raised_hands",
+      "importance": 0.19725
+    },
+    {
+      "feature": "gender_F",
+      "importance": 0.1769
+    },
+    {
+      "feature": "gender_M",
+      "importance": 0.17687
+    },
+    {
+      "feature": "topic_Literature",
+      "importance": 0.12674
+    },
+    {
+      "feature": "parent_answering_survey_Bad",
+      "importance": 0.1126
+    },
+    {
+      "feature": "student_absence_days_Above-7",
+      "importance": 0.1126
+    },
+    {
+      "feature": "parent_answering_survey_Good",
+      "importance": 0.11241
+    },
+    {
+      "feature": "student_absence_days_Under-7",
+      "importance": 0.11241
+    },
+    {
+      "feature": "topic_Maths",
+      "importance": 0.10409
+    },
+    {
+      "feature": "stage_Adult",
+      "importance": 0.08804
+    },
+    {
+      "feature": "topic_English",
+      "importance": 0.08637
+    },
+    {
+      "feature": "stage_KS3",
+      "importance": 0.07328
+    },
+    {
+      "feature": "grade_band_C",
+      "importance": 0.07328
+    },
+    {
+      "feature": "stage_A-Level",
+      "importance": 0.06419
+    }
+  ],
+  "features": [
+    "raised_hands",
+    "visited_resources",
+    "announcements_view",
+    "discussion",
+    "parent_satisfaction",
+    "gender",
+    "nationality",
+    "topic",
+    "stage",
+    "grade_band",
+    "parent_answering_survey",
+    "student_absence_days"
+  ],
+  "target": "engagement_level",
+  "dataset_name": "xAPI-Edu-Data teaching sample"
+}

@@ -1,0 +1,43 @@
+subject,topic,difficulty_level,curriculum_level,age_range,description
+Mathematics,Number,Beginner,KS3 Mathematics,12-14,Place value fractions decimals percentages negative numbers and order of operations
+Mathematics,Algebra,Beginner,KS3 Mathematics,12-14,Expressions equations sequences substitution and simple graphs
+Mathematics,Geometry,Beginner,KS3 Mathematics,12-14,Angles shapes area perimeter transformations and constructions
+Mathematics,Ratio and Proportion,Beginner,KS3 Mathematics,12-14,Simplifying ratios scale factors direct proportion and recipes
+Mathematics,Statistics,Beginner,KS3 Mathematics,12-14,Averages charts tables sampling and interpreting data
+Mathematics,Probability,Beginner,KS3 Mathematics,12-14,Probability scales sample spaces and expected outcomes
+Mathematics,Algebra,Intermediate,GCSE Mathematics Foundation,14-16,Linear equations inequalities formulae graphs and sequences
+Mathematics,Geometry,Intermediate,GCSE Mathematics Foundation,14-16,Similarity congruence circles bearings and Pythagoras
+Mathematics,Trigonometry,Intermediate,GCSE Mathematics Higher,14-16,SOHCAHTOA sine rule cosine rule and trigonometric graphs
+Mathematics,Probability,Intermediate,GCSE Mathematics Higher,14-16,Tree diagrams conditional probability and independent events
+Mathematics,Statistics,Intermediate,GCSE Mathematics Higher,14-16,Histograms cumulative frequency box plots and data comparison
+Mathematics,Calculus,Advanced,A-Level Mathematics,16-18,Differentiation integration stationary points and area under curves
+Mathematics,Vectors,Advanced,A-Level Mathematics,16-18,Vector notation lines in 2D and 3D scalar products and geometry
+Mathematics,Mechanics,Advanced,A-Level Mathematics,16-18,Kinematics forces Newton's laws moments and projectiles
+Mathematics,Pure Mathematics,Advanced,A-Level Mathematics,16-18,Functions proof sequences logarithms exponentials and trigonometry
+Mathematics,Matrices,Advanced,Further Mathematics,16-18,Matrix operations transformations determinants inverses and systems
+Mathematics,Calculus,Advanced,Further Mathematics,16-18,Further differentiation integration differential equations and series
+Mathematics,Algebra,Advanced,University Preparation,18-25,Proof algebraic structure functions modelling and problem solving
+English Language,Reading comprehension,Beginner,KS3 English Language,12-14,Retrieval inference summarising and evidence selection
+English Language,Creative writing,Beginner,KS3 English Language,12-14,Narrative openings description character setting and structure
+English Language,Grammar,Beginner,KS3 English Language,12-14,Sentence types clauses tense agreement and accurate expression
+English Language,Punctuation,Beginner,KS3 English Language,12-14,Commas apostrophes speech punctuation colons and semicolons
+English Language,Vocabulary,Beginner,KS3 English Language,12-14,Word choice ambitious vocabulary synonyms and tone
+English Language,Spelling,Beginner,KS3 English Language,12-14,Common patterns prefixes suffixes homophones and proofreading
+English Language,Language analysis,Intermediate,GCSE English Language,14-16,Methods effects quotations inference and writer intentions
+English Language,Transactional writing,Intermediate,GCSE English Language,14-16,Letters articles speeches reviews reports and viewpoint writing
+English Language,Persuasive writing,Intermediate,GCSE English Language,14-16,Rhetorical devices structure audience purpose and tone
+English Language,Exam techniques,Intermediate,GCSE English Language,14-16,Timing question focus evaluation comparison and planning
+English Language,Essay writing,Advanced,A-Level English Language,16-18,Argument structure linguistic terminology and data-led analysis
+English Language,Language analysis,Advanced,University Preparation,18-25,Discourse grammar pragmatics representation and critical analysis
+English Literature,Poetry,Beginner,KS3 English Literature,12-14,Imagery rhythm speaker theme comparison and personal response
+English Literature,Shakespeare,Beginner,KS3 English Literature,12-14,Plot character dramatic methods context and key quotations
+English Literature,Modern texts,Intermediate,GCSE English Literature,14-16,Themes characters structure context and exam responses
+English Literature,19th Century texts,Intermediate,GCSE English Literature,14-16,Context language characterisation themes and extracts
+English Literature,Literary analysis,Intermediate,GCSE English Literature,14-16,Quotation analysis methods effects and interpretations
+English Literature,Themes,Intermediate,GCSE English Literature,14-16,Tracking theme development across whole texts
+English Literature,Characters,Intermediate,GCSE English Literature,14-16,Character arcs relationships motives and evidence
+English Literature,Context,Intermediate,GCSE English Literature,14-16,Historical social biographical and literary contexts
+English Literature,Quotations,Intermediate,GCSE English Literature,14-16,Selecting memorising embedding and analysing quotations
+English Literature,Essay writing,Advanced,A-Level English Literature,16-18,Critical argument comparison interpretations and academic style
+English Literature,Poetry,Advanced,A-Level English Literature,16-18,Close analysis form structure voice and comparative readings
+English Literature,Literary analysis,Advanced,University Preparation,18-25,Critical theory independent interpretation and scholarly argument

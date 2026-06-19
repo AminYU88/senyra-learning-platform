@@ -1,0 +1,113 @@
+{
+  "best_model_name": "Logistic Regression",
+  "model_results": {
+    "Logistic Regression": {
+      "accuracy": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "f1_macro": 1.0
+    },
+    "Random Forest": {
+      "accuracy": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "f1_macro": 1.0
+    },
+    "Gradient Boosting": {
+      "accuracy": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "f1_macro": 1.0
+    },
+    "Decision Tree": {
+      "accuracy": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "f1_macro": 1.0
+    }
+  },
+  "dataset_rows": 30,
+  "features": [
+    "attendance_rate",
+    "engagement_score",
+    "average_quiz_score",
+    "assignment_score",
+    "lesson_completion_rate",
+    "study_hours_per_week",
+    "late_submissions",
+    "forum_posts",
+    "practice_exercises_completed",
+    "previous_failures",
+    "course_level",
+    "primary_topic"
+  ],
+  "feature_importance": [
+    {
+      "feature": "course_level_intermediate",
+      "importance": 0.50053
+    },
+    {
+      "feature": "forum_posts",
+      "importance": 0.32489
+    },
+    {
+      "feature": "late_submissions",
+      "importance": 0.32313
+    },
+    {
+      "feature": "course_level_advanced",
+      "importance": 0.30371
+    },
+    {
+      "feature": "lesson_completion_rate",
+      "importance": 0.2944
+    },
+    {
+      "feature": "practice_exercises_completed",
+      "importance": 0.2815
+    },
+    {
+      "feature": "average_quiz_score",
+      "importance": 0.28049
+    },
+    {
+      "feature": "attendance_rate",
+      "importance": 0.26164
+    },
+    {
+      "feature": "engagement_score",
+      "importance": 0.25898
+    },
+    {
+      "feature": "course_level_beginner",
+      "importance": 0.24186
+    },
+    {
+      "feature": "study_hours_per_week",
+      "importance": 0.23058
+    },
+    {
+      "feature": "assignment_score",
+      "importance": 0.2251
+    },
+    {
+      "feature": "primary_topic_web",
+      "importance": 0.21904
+    },
+    {
+      "feature": "previous_failures",
+      "importance": 0.17304
+    },
+    {
+      "feature": "primary_topic_networking",
+      "importance": 0.10887
+    }
+  ],
+  "dataset_justification": "Education-sector student learning analytics dataset containing attendance, engagement, quiz results, assessment outcomes, learning activity, and weak topics.",
+  "ethical_considerations": [
+    "Predictions should support students, not punish them.",
+    "Risk labels are decision-support signals and should be reviewed by teachers.",
+    "The model avoids protected personal characteristics.",
+    "Recommendations should be explainable and linked to learning behaviour."
+  ]
+}

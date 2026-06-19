@@ -1,0 +1,38 @@
+# Node
+
+node_modules/
+frontend/node_modules/
+
+# Python
+
+venv/
+**pycache**/
+*.pyc
+
+# Environment variables
+
+.env
+frontend/.env
+backend/.env
+
+# Logs
+
+*.log
+
+# Build folders
+
+build/
+dist/
+
+# Database
+
+senyra.db
+
+# VS Code
+
+.vscode/
+
+# OS files
+
+.DS_Store
+Thumbs.db

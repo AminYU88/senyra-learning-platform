@@ -1,0 +1,11 @@
+gender,nationality,topic,stage,grade_band,raised_hands,visited_resources,announcements_view,discussion,parent_satisfaction,parent_answering_survey,student_absence_days,engagement_level
+M,UK,Maths,GCSE,A,92,84,42,18,5,Good,Under-7,High
+F,UK,English,GCSE,B,75,62,28,10,4,Good,Under-7,Medium
+M,UK,Maths,KS3,C,34,25,9,2,1,Bad,Above-7,Low
+F,UK,Literature,A-Level,A,88,90,37,15,5,Good,Under-7,High
+M,UK,English,KS3,C,41,36,12,3,2,Bad,Above-7,Low
+F,UK,Maths,A-Level,B,69,72,24,8,4,Good,Under-7,Medium
+M,UK,Literature,GCSE,B,64,58,21,7,3,Good,Under-7,Medium
+F,UK,Maths,Further Maths,A,95,93,45,21,5,Good,Under-7,High
+M,UK,English,GCSE,D,22,19,4,1,1,Bad,Above-7,Low
+F,UK,Maths,Adult,B,73,68,27,11,4,Good,Under-7,Medium

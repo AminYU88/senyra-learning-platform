@@ -1,0 +1,711 @@
+{
+  "best_model_name": "Decision Tree",
+  "model_results": {
+    "Logistic Regression": {
+      "accuracy": 0.125,
+      "precision": 0.05,
+      "recall": 0.1,
+      "f1_score": 0.0667,
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "Random Forest": {
+      "accuracy": 0.125,
+      "precision": 0.0833,
+      "recall": 0.0833,
+      "f1_score": 0.0833,
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "Gradient Boosting": {
+      "accuracy": 0.25,
+      "precision": 0.1364,
+      "recall": 0.1818,
+      "f1_score": 0.1515,
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "Decision Tree": {
+      "accuracy": 0.375,
+      "precision": 0.2273,
+      "recall": 0.2727,
+      "f1_score": 0.2424,
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "course_level_beginner",
+      "importance": 0.17778
+    },
+    {
+      "feature": "study_hours_per_week",
+      "importance": 0.11111
+    },
+    {
+      "feature": "course_level_intermediate",
+      "importance": 0.11111
+    },
+    {
+      "feature": "primary_topic_networking",
+      "importance": 0.11111
+    },
+    {
+      "feature": "primary_topic_python",
+      "importance": 0.11111
+    },
+    {
+      "feature": "primary_topic_sql",
+      "importance": 0.11111
+    },
+    {
+      "feature": "primary_topic_web",
+      "importance": 0.11111
+    },
+    {
+      "feature": "risk_level_medium",
+      "importance": 0.11111
+    },
+    {
+      "feature": "attendance_rate",
+      "importance": 0.04444
+    },
+    {
+      "feature": "engagement_score",
+      "importance": 0.0
+    },
+    {
+      "feature": "average_quiz_score",
+      "importance": 0.0
+    },
+    {
+      "feature": "assignment_score",
+      "importance": 0.0
+    },
+    {
+      "feature": "lesson_completion_rate",
+      "importance": 0.0
+    },
+    {
+      "feature": "late_submissions",
+      "importance": 0.0
+    },
+    {
+      "feature": "forum_posts",
+      "importance": 0.0
+    },
+    {
+      "feature": "practice_exercises_completed",
+      "importance": 0.0
+    },
+    {
+      "feature": "previous_failures",
+      "importance": 0.0
+    },
+    {
+      "feature": "course_level_advanced",
+      "importance": 0.0
+    },
+    {
+      "feature": "primary_topic_cybersecurity",
+      "importance": 0.0
+    },
+    {
+      "feature": "risk_level_high",
+      "importance": 0.0
+    }
+  ],
+  "features": [
+    "attendance_rate",
+    "engagement_score",
+    "average_quiz_score",
+    "assignment_score",
+    "lesson_completion_rate",
+    "study_hours_per_week",
+    "late_submissions",
+    "forum_posts",
+    "practice_exercises_completed",
+    "previous_failures",
+    "course_level",
+    "primary_topic",
+    "risk_level",
+    "engagement_level"
+  ],
+  "target": "weak_topic",
+  "dataset_name": "Senyra internal learning data"
+}

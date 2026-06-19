@@ -1,0 +1,183 @@
+{
+  "best_model_name": "Logistic Regression",
+  "model_results": {
+    "Logistic Regression": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    },
+    "Random Forest": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    },
+    "Gradient Boosting": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    },
+    "Decision Tree": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "course_level_intermediate",
+      "importance": 0.46414
+    },
+    {
+      "feature": "learner_type_Problem Solver",
+      "importance": 0.31573
+    },
+    {
+      "feature": "attendance_rate",
+      "importance": 0.28516
+    },
+    {
+      "feature": "creativity_score",
+      "importance": 0.28495
+    },
+    {
+      "feature": "course_level_advanced",
+      "importance": 0.28106
+    },
+    {
+      "feature": "learning_dna_confidence",
+      "importance": 0.27974
+    },
+    {
+      "feature": "engagement_score",
+      "importance": 0.27407
+    },
+    {
+      "feature": "average_quiz_score",
+      "importance": 0.26715
+    },
+    {
+      "feature": "study_consistency",
+      "importance": 0.26381
+    },
+    {
+      "feature": "problem_solving_score",
+      "importance": 0.26099
+    },
+    {
+      "feature": "course_level_beginner",
+      "importance": 0.2539
+    },
+    {
+      "feature": "task_completion_rate",
+      "importance": 0.25166
+    },
+    {
+      "feature": "flow_score",
+      "importance": 0.23507
+    },
+    {
+      "feature": "learner_type_Exploratory Learner",
+      "importance": 0.22325
+    },
+    {
+      "feature": "weak_topic_count",
+      "importance": 0.07072
+    },
+    {
+      "feature": "learner_type_Analytical Learner",
+      "importance": 0.06779
+    },
+    {
+      "feature": "learner_type_Creative Learner",
+      "importance": 0.06198
+    }
+  ],
+  "features": [
+    "attendance_rate",
+    "average_quiz_score",
+    "engagement_score",
+    "creativity_score",
+    "flow_score",
+    "learning_dna_confidence",
+    "study_consistency",
+    "task_completion_rate",
+    "weak_topic_count",
+    "problem_solving_score",
+    "course_level",
+    "learner_type"
+  ],
+  "target": "risk_level",
+  "dataset_name": "Senyra cognitive and behavioural learning analytics"
+}

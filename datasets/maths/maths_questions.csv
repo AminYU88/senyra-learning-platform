@@ -1,0 +1,9 @@
+curriculum_level,topic,question,answer,worked_solution
+KS3,Number,Simplify 18/24.,3/4,Divide numerator and denominator by 6.
+KS3,Algebra,Solve x + 7 = 12.,x = 5,Subtract 7 from both sides.
+GCSE Foundation,Ratio,Share 30 in the ratio 2:3.,12 and 18,"There are 5 parts, each part is 6."
+GCSE Higher,Trigonometry,Find sin(30 degrees).,0.5,Use exact trig values.
+A-Level,Calculus,Differentiate x^3.,3x^2,Use the power rule.
+Further Mathematics,Matrices,"What is the determinant of [[1,2],[3,4]]?",-2,ad - bc = 4 - 6.
+A-Level,Vectors,What does a scalar product of 0 imply?,Vectors are perpendicular,Zero dot product means orthogonal vectors.
+A-Level,Mechanics,State Newton's second law.,F = ma,Resultant force equals mass times acceleration.

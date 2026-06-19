@@ -1,0 +1,187 @@
+{
+  "best_model_name": "Logistic Regression",
+  "model_results": {
+    "Logistic Regression": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    },
+    "Random Forest": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    },
+    "Gradient Boosting": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    },
+    "Decision Tree": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ]
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "course_level_intermediate",
+      "importance": 0.50053
+    },
+    {
+      "feature": "forum_posts",
+      "importance": 0.32489
+    },
+    {
+      "feature": "late_submissions",
+      "importance": 0.32313
+    },
+    {
+      "feature": "course_level_advanced",
+      "importance": 0.30371
+    },
+    {
+      "feature": "lesson_completion_rate",
+      "importance": 0.2944
+    },
+    {
+      "feature": "practice_exercises_completed",
+      "importance": 0.2815
+    },
+    {
+      "feature": "average_quiz_score",
+      "importance": 0.28049
+    },
+    {
+      "feature": "attendance_rate",
+      "importance": 0.26164
+    },
+    {
+      "feature": "engagement_score",
+      "importance": 0.25898
+    },
+    {
+      "feature": "course_level_beginner",
+      "importance": 0.24186
+    },
+    {
+      "feature": "study_hours_per_week",
+      "importance": 0.23058
+    },
+    {
+      "feature": "assignment_score",
+      "importance": 0.2251
+    },
+    {
+      "feature": "primary_topic_web",
+      "importance": 0.21904
+    },
+    {
+      "feature": "previous_failures",
+      "importance": 0.17304
+    },
+    {
+      "feature": "primary_topic_networking",
+      "importance": 0.10887
+    },
+    {
+      "feature": "primary_topic_python",
+      "importance": 0.10462
+    },
+    {
+      "feature": "primary_topic_sql",
+      "importance": 0.10145
+    },
+    {
+      "feature": "primary_topic_cybersecurity",
+      "importance": 0.02365
+    }
+  ],
+  "features": [
+    "attendance_rate",
+    "engagement_score",
+    "average_quiz_score",
+    "assignment_score",
+    "lesson_completion_rate",
+    "study_hours_per_week",
+    "late_submissions",
+    "forum_posts",
+    "practice_exercises_completed",
+    "previous_failures",
+    "course_level",
+    "primary_topic"
+  ],
+  "target": "risk_level",
+  "dataset_name": "Senyra internal learning data"
+}
