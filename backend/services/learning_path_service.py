@@ -86,7 +86,11 @@ def student_signals(db: Session, student: Student) -> dict:
     lesson_progress = round((completed_lessons / total_lessons) * 100, 2) if total_lessons else 0
     average_quiz_score = average([attempt.score for attempt in quiz_attempts])
     engagement_score = min(100, len(events) * 8 + len(quiz_attempts) * 5)
-    weak_topics = detect_student_weak_topics(db, student)
+    topic_strengths = detect_student_weak_topics(db, student)
+    support_topics = [
+        topic for topic in topic_strengths
+        if topic.get("status") in ["Weak", "Medium"]
+    ]
 
     try:
         risk = predict_current_student_risk(db, student)
@@ -105,7 +109,8 @@ def student_signals(db: Session, student: Student) -> dict:
         "quiz_attempts": len(quiz_attempts),
         "engagement_score": engagement_score,
         "lesson_progress": lesson_progress,
-        "weak_topics": weak_topics,
+        "weak_topics": support_topics,
+        "topic_strength_count": len(topic_strengths),
         "risk_level": risk_level,
         "cognitive_risk_level": cognitive_risk_level,
         "flow_score": flow.average_flow_score if flow else 0,
@@ -146,12 +151,49 @@ def choose_level(signals: dict) -> str:
     return "Advanced / Adult Learner"
 
 
+def current_level_from_signals(signals: dict) -> str:
+    score = (
+        signals["average_quiz_score"] * 0.45
+        + signals["lesson_progress"] * 0.25
+        + signals["engagement_score"] * 0.2
+        + signals["flow_score"] * 0.1
+    )
+
+    if score < 38:
+        return "Beginner"
+    if score < 70:
+        return "Intermediate"
+    return "Advanced"
+
+
+def progress_status(progress_percent: float, signals: dict) -> str:
+    if signals["risk_level"] == "High" or signals["cognitive_risk_level"] == "High":
+        return "Needs Support"
+    if progress_percent >= 75 and signals["average_quiz_score"] >= 75:
+        return "On Track"
+    if progress_percent >= 40:
+        return "Building Momentum"
+    return "Getting Started"
+
+
 def difficulty_for_level(level: str, signals: dict) -> str:
     if level in ["KS3", "GCSE Foundation"] or signals["risk_level"] == "High":
         return "Easy"
     if level in ["GCSE Higher", "A-Level"]:
         return "Medium"
     return "Hard"
+
+
+def topic_status(topic: str, subject: str, signals: dict) -> str:
+    for weak_topic in signals["weak_topics"]:
+        if weak_topic["subject"] == subject and weak_topic["topic"] == topic:
+            return weak_topic.get("status", "Weak")
+
+    if signals["average_quiz_score"] >= 80:
+        return "Stretch"
+    if signals["average_quiz_score"] >= 60:
+        return "Practice"
+    return "Revision"
 
 
 def choose_subjects(signals: dict, preferred_subject: str | None = None) -> list[str]:
@@ -218,6 +260,49 @@ def reason_for_path(level: str, subject: str, signals: dict) -> str:
     return f"{level} is recommended from your quiz performance, engagement and lesson progress."
 
 
+def topic_reason(topic: str, subject: str, signals: dict) -> str:
+    for weak_topic in signals["weak_topics"]:
+        if weak_topic["subject"] == subject and weak_topic["topic"] == topic:
+            return (
+                f"Prioritised because {topic} is currently {weak_topic.get('status', 'Weak').lower()} "
+                f"with an average score of {round(weak_topic['average_score'])}%."
+            )
+
+    if signals["learner_type"] != "Not assessed":
+        return f"Selected to match the {signals['learner_type'].lower()} profile and current performance."
+
+    return "Selected as the next logical topic from quiz, engagement and progress signals."
+
+
+def topic_activity(status: str, topic: str) -> str:
+    if status == "Weak":
+        return f"Revise {topic}, review mistakes, then complete a short quiz."
+    if status == "Medium":
+        return f"Practise {topic} with mixed questions to reach strong."
+    if status == "Strong":
+        return f"Use {topic} as a confidence-builder and try a stretch task."
+    if status == "Stretch":
+        return f"Attempt a harder {topic} challenge."
+    return f"Complete guided practice for {topic}."
+
+
+def build_next_topic_cards(subject: str, topics: list[str], difficulty: str, signals: dict) -> list[dict]:
+    cards = []
+
+    for topic in topics:
+        status = topic_status(topic, subject, signals)
+        cards.append({
+            "subject": subject,
+            "topic": topic,
+            "difficulty": difficulty,
+            "status": status,
+            "reason": topic_reason(topic, subject, signals),
+            "recommended_activity": topic_activity(status, topic)
+        })
+
+    return cards
+
+
 def build_tasks(subject: str, topics: list[str], difficulty: str, signals: dict) -> tuple[list[str], list[str]]:
     next_topic = topics[0] if topics else subject
     daily_tasks = [
@@ -265,6 +350,7 @@ def build_adaptive_learning_path(
     preferred_subject: str | None = None
 ) -> dict:
     signals = student_signals(db, student)
+    current_level = current_level_from_signals(signals)
     level = choose_level(signals)
     subjects = choose_subjects(signals, preferred_subject)
     subject = subjects[0]
@@ -273,20 +359,25 @@ def build_adaptive_learning_path(
     daily_tasks, weekly_plan = build_tasks(subject, topics, difficulty, signals)
     learning_path = build_learning_steps(subject, topics, weekly_plan)
     progress_percent = min(100, round((signals["lesson_progress"] + min(signals["quiz_attempts"] * 12, 60)) / 2, 2))
+    next_topic_cards = build_next_topic_cards(subject, topics, difficulty, signals)
 
     return {
         "student_id": student.id,
         "student": student.full_name,
         "level": level,
+        "current_level": current_level,
+        "recommended_level": level,
         "subject": subject,
         "recommended_subjects": subjects,
         "next_topics": topics,
+        "next_topic_cards": next_topic_cards,
         "difficulty": difficulty,
         "reason": reason_for_path(level, subject, signals),
         "daily_tasks": daily_tasks,
         "weekly_plan": weekly_plan,
         "estimated_completion_time": "1-2 weeks" if difficulty != "Hard" else "2-3 weeks",
         "progress_percent": progress_percent,
+        "progress_status": progress_status(progress_percent, signals),
         "signals": {
             key: value
             for key, value in signals.items()
@@ -298,8 +389,7 @@ def build_adaptive_learning_path(
     }
 
 
-def build_admin_learning_path_summary(db: Session) -> dict:
-    students = db.query(Student).filter(Student.role == "student").all()
+def build_learning_path_summary_for_students(db: Session, students: list[Student]) -> dict:
     paths = [
         build_adaptive_learning_path(db, student)
         for student in students
@@ -349,3 +439,8 @@ def build_admin_learning_path_summary(db: Session) -> dict:
         ],
         "paths": paths
     }
+
+
+def build_admin_learning_path_summary(db: Session) -> dict:
+    students = db.query(Student).filter(Student.role == "student").all()
+    return build_learning_path_summary_for_students(db, students)

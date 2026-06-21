@@ -8,6 +8,12 @@ const severityClasses = {
   Low: "bg-emerald-100 text-emerald-700"
 };
 
+const statusClasses = {
+  Weak: "bg-red-100 text-red-700",
+  Medium: "bg-amber-100 text-amber-700",
+  Strong: "bg-emerald-100 text-emerald-700"
+};
+
 
 function WeakTopicsCard({
   title = "Weak Topics",
@@ -51,13 +57,13 @@ function WeakTopicsCard({
 
       {!error && loading && (
         <div className="rounded-xl bg-slate-50 p-4 font-semibold text-slate-500">
-          Detecting weak topics from real learning data...
+          Classifying topic strength from quiz scores, attempts, progress and engagement...
         </div>
       )}
 
       {!error && !loading && visibleTopics.length === 0 && (
         <div className="rounded-xl bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-500">
-          No weak topics detected yet. Complete topic quizzes to unlock this insight.
+          No topic evidence is available yet. Complete topic quizzes and lessons to unlock Weak, Medium and Strong classifications.
         </div>
       )}
 
@@ -82,7 +88,7 @@ function WeakTopicsCard({
           onClick={() => navigate("/weak-topics")}
           className="mt-5 w-full rounded-xl bg-slate-900 px-4 py-3 font-bold text-white hover:bg-slate-800"
         >
-          View all weak topics
+          View all topic strengths
         </button>
       )}
     </section>
@@ -98,6 +104,8 @@ function WeakTopicRow({
   onQuiz
 }) {
   const strugglingCount = topic.struggling_students?.length || 0;
+  const score = Number(topic.average_score || 0);
+  const status = topic.status || (score < 60 ? "Weak" : score < 80 ? "Medium" : "Strong");
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -108,18 +116,28 @@ function WeakTopicRow({
               {topic.topic}
             </h3>
 
+            <span className={`rounded-full px-3 py-1 text-xs font-bold ${statusClasses[status] || "bg-slate-200 text-slate-700"}`}>
+              {status}
+            </span>
+
             <span className={`rounded-full px-3 py-1 text-xs font-bold ${severityClasses[topic.severity] || "bg-slate-200 text-slate-700"}`}>
-              {topic.severity}
+              {topic.severity} priority
             </span>
           </div>
 
           <p className="mt-1 text-sm text-slate-500">
-            {topic.subject} · average {Math.round(topic.average_score || 0)}% · {topic.attempts || 0} low-score attempt{topic.attempts === 1 ? "" : "s"}
+            {topic.subject} - average {Math.round(score)}% - {topic.attempts || 0} attempt{topic.attempts === 1 ? "" : "s"}
           </p>
+
+          {!compact && (
+            <p className="mt-1 text-xs font-semibold uppercase text-slate-400">
+              Engagement {Math.round(topic.engagement_score || 0)}% - Lesson completion {Math.round(topic.lesson_completion || 0)}%
+            </p>
+          )}
 
           {mode !== "student" && strugglingCount > 0 && (
             <p className="mt-1 text-sm font-semibold text-slate-700">
-              {strugglingCount} student{strugglingCount === 1 ? "" : "s"} struggling
+              {topic.weak_students || strugglingCount} weak - {topic.medium_students || 0} medium - {topic.strong_students || 0} strong
             </p>
           )}
 

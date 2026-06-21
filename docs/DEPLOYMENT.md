@@ -2,6 +2,8 @@
 
 This guide prepares Senyra for a production-style deployment with a separate FastAPI backend and Vite React frontend.
 
+For the live assessor demo deployment path using Render and Vercel, see `docs/LIVE_DEPLOYMENT.md`.
+
 ## 1. Backend Environment
 
 Create `.env` in the project root from `.env.example`.

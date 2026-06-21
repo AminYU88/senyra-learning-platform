@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pathlib import Path
 
@@ -12,9 +12,6 @@ from backend.models.lesson_progress import LessonProgress
 
 from backend.auth.role_checker import require_roles
 
-import joblib
-import numpy as np
-
 
 router = APIRouter(
     prefix="/admin",
@@ -24,17 +21,50 @@ router = APIRouter(
 
 MODEL_PATH = Path(__file__).resolve().parents[1] / "ml" / "risk_model.pkl"
 
-model = joblib.load(MODEL_PATH) if MODEL_PATH.exists() else None
+model = None
+model_load_error = None
+
+
+def load_legacy_risk_model():
+    global model, model_load_error
+
+    if model is not None or model_load_error is not None:
+        return model
+
+    if not MODEL_PATH.exists():
+        model_load_error = "Legacy risk model file is not available."
+        return None
+
+    try:
+        import joblib
+
+        model = joblib.load(MODEL_PATH)
+    except Exception as error:
+        model_load_error = str(error)
+        model = None
+
+    return model
+
+
+def fallback_risk_level(
+    engagement_score: float,
+    average_quiz_score: float,
+    lesson_progress: float
+) -> str:
+    support_score = (
+        average_quiz_score * 0.45
+        + lesson_progress * 0.30
+        + engagement_score * 0.25
+    )
+
+    if support_score < 50:
+        return "High"
+    if support_score < 70:
+        return "Medium"
+    return "Low"
 
 
 def analyse_student(student: Student, db: Session):
-
-    if model is None:
-        raise HTTPException(
-            status_code=500,
-            detail="ML model not found. Train the model first."
-        )
-
     events = db.query(LearningEvent).filter(
         LearningEvent.student_id == student.id
     ).all()
@@ -87,31 +117,43 @@ def analyse_student(student: Student, db: Session):
             2
         )
 
-    features = np.array([[
-        video_count,
-        quiz_count,
-        practice_count,
-        average_quiz_score,
-        lesson_progress
-    ]])
-
-    prediction = model.predict(features)[0]
-
+    loaded_model = load_legacy_risk_model()
     confidence_score = 0
+    prediction_source = "Rule-based fallback"
 
-    if hasattr(model, "predict_proba"):
-        probabilities = model.predict_proba(features)[0]
-        confidence_score = round(
-            max(probabilities) * 100,
-            2
-        )
+    if loaded_model is not None:
+        import numpy as np
 
-    if prediction == 0:
-        risk_level = "High"
-    elif prediction == 1:
-        risk_level = "Medium"
+        features = np.array([[
+            video_count,
+            quiz_count,
+            practice_count,
+            average_quiz_score,
+            lesson_progress
+        ]])
+
+        prediction = loaded_model.predict(features)[0]
+        prediction_source = "Legacy ML model"
+
+        if hasattr(loaded_model, "predict_proba"):
+            probabilities = loaded_model.predict_proba(features)[0]
+            confidence_score = round(
+                max(probabilities) * 100,
+                2
+            )
+
+        if prediction == 0:
+            risk_level = "High"
+        elif prediction == 1:
+            risk_level = "Medium"
+        else:
+            risk_level = "Low"
     else:
-        risk_level = "Low"
+        risk_level = fallback_risk_level(
+            engagement_score,
+            average_quiz_score,
+            lesson_progress
+        )
 
     return {
         "id": student.id,
@@ -122,6 +164,9 @@ def analyse_student(student: Student, db: Session):
         "engagement_score": engagement_score,
         "risk_level": risk_level,
         "confidence_score": confidence_score,
+        "prediction_source": prediction_source,
+        "model_status": "available" if loaded_model is not None else "fallback",
+        "model_error": model_load_error,
         "videos": video_count,
         "quizzes": quiz_count,
         "practice": practice_count,
@@ -208,5 +253,5 @@ def ml_overview(
         "average_engagement": average_engagement,
         "average_quiz_score": average_quiz_score,
         "average_lesson_progress": average_lesson_progress,
-        "prediction_source": "Machine Learning Model"
+        "prediction_source": "Machine Learning Model" if model is not None else "Rule-based fallback"
     }

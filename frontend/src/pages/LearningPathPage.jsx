@@ -181,14 +181,17 @@ function StudentLearningPathView({
               Start with the next topic, then move through the path in order.
             </p>
             <div className="mt-5 space-y-3">
-              {(path.next_topics || []).map((topic) => (
+              {(path.next_topic_cards || (path.next_topics || []).map((topic) => ({ topic, subject: path.subject, difficulty: path.difficulty }))).map((item) => (
                 <RecommendedTopicCard
-                  key={topic}
-                  topic={topic}
-                  subject={path.subject}
-                  difficulty={path.difficulty}
-                  onRevise={() => navigate(`/study-planner?subject=${encodeURIComponent(path.subject)}&topic=${encodeURIComponent(topic)}`)}
-                  onQuiz={() => navigate(`/quiz-generator?subject=${encodeURIComponent(path.subject)}&topic=${encodeURIComponent(topic)}`)}
+                  key={item.topic}
+                  topic={item.topic}
+                  subject={item.subject || path.subject}
+                  difficulty={item.difficulty || path.difficulty}
+                  status={item.status}
+                  reason={item.reason}
+                  recommendedActivity={item.recommended_activity}
+                  onRevise={() => navigate(`/study-planner?subject=${encodeURIComponent(item.subject || path.subject)}&topic=${encodeURIComponent(item.topic)}`)}
+                  onQuiz={() => navigate(`/quiz-generator?subject=${encodeURIComponent(item.subject || path.subject)}&topic=${encodeURIComponent(item.topic)}`)}
                 />
               ))}
             </div>
@@ -303,11 +306,11 @@ function StaffLearningPathView({
                           {item.student}
                         </h3>
                         <p className="mt-1 text-sm text-slate-500">
-                          {item.level} · {item.subject} · {item.difficulty}
+                          {item.current_level || "Not assessed"} to {item.recommended_level || item.level} - {item.subject} - {item.difficulty}
                         </p>
                       </div>
                       <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-slate-700">
-                        {Math.round(item.progress_percent || 0)}%
+                        {item.progress_status || `${Math.round(item.progress_percent || 0)}%`}
                       </span>
                     </div>
                   </button>

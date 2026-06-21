@@ -13,7 +13,8 @@ from backend.schemas.learning_path_schema import (
 )
 from backend.services.learning_path_service import (
     build_adaptive_learning_path,
-    build_admin_learning_path_summary
+    build_admin_learning_path_summary,
+    build_learning_path_summary_for_students
 )
 
 
@@ -137,25 +138,6 @@ def learning_path_admin_summary(
 ):
     if current_user.role == "teacher":
         students = get_teacher_students(db, current_user.id)
-        paths = [
-            build_adaptive_learning_path(db, student)
-            for student in students
-        ]
-        summary = build_admin_learning_path_summary(db)
-        teacher_student_ids = {student.id for student in students}
-        summary["paths"] = [
-            path for path in summary["paths"]
-            if path["student_id"] in teacher_student_ids
-        ]
-        summary["total_students"] = len(students)
-        summary["students_needing_easier_path"] = [
-            item for item in summary["students_needing_easier_path"]
-            if item["student_id"] in teacher_student_ids
-        ]
-        summary["students_ready_for_harder_path"] = [
-            item for item in summary["students_ready_for_harder_path"]
-            if item["student_id"] in teacher_student_ids
-        ]
-        return summary
+        return build_learning_path_summary_for_students(db, students)
 
     return build_admin_learning_path_summary(db)

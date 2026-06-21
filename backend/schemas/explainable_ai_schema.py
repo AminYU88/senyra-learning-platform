@@ -11,6 +11,8 @@ class ExplanationResponse(BaseModel):
     prediction_type: str
     result: str
     confidence: float | None = None
+    confidence_label: str | None = None
+    evidence_source: str | None = None
     top_factors: list[FactorImpact]
     positive_factors: list[FactorImpact]
     negative_factors: list[FactorImpact]

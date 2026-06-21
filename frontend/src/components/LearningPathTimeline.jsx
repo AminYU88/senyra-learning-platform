@@ -30,7 +30,7 @@ function LearningPathTimeline({
             </p>
 
             <p className="mt-2 text-xs font-bold uppercase text-slate-400">
-              {step.subject} · {step.topic} · {step.estimated_minutes} min
+              {step.subject} - {step.topic} - {step.estimated_minutes} min
             </p>
           </div>
         </div>

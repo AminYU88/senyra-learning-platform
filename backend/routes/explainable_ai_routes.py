@@ -18,6 +18,7 @@ from backend.services.explainable_ai_service import (
     recommendation_explanation,
     risk_explanation
 )
+from collections import Counter
 
 
 router = APIRouter(
@@ -157,15 +158,33 @@ def explainability_admin_summary(
             build_student_explainability(db, student)
             for student in teacher_students
         ]
-        admin_summary = build_admin_explainability_summary(db)
-        student_ids = {student.id for student in teacher_students}
-        admin_summary["student_summaries"] = summaries
-        admin_summary["total_students"] = len(summaries)
-        admin_summary["explanations_generated"] = sum(len(item["explanations"]) for item in summaries)
-        admin_summary["risk_level_summary"] = [
-            item for item in admin_summary["risk_level_summary"]
-            if any(summary["student_id"] in student_ids for summary in summaries)
-        ]
-        return admin_summary
+        positive_counter = Counter()
+        negative_counter = Counter()
+        risk_counter = Counter()
+
+        for summary in summaries:
+            for explanation in summary["explanations"]:
+                if explanation["prediction_type"] == "Student Risk":
+                    risk_counter[explanation["result"]] += 1
+                positive_counter.update(item["factor"] for item in explanation["positive_factors"])
+                negative_counter.update(item["factor"] for item in explanation["negative_factors"])
+
+        return {
+            "total_students": len(summaries),
+            "explanations_generated": sum(len(item["explanations"]) for item in summaries),
+            "common_positive_factors": [
+                {"factor": factor_name, "count": count}
+                for factor_name, count in positive_counter.most_common(8)
+            ],
+            "common_negative_factors": [
+                {"factor": factor_name, "count": count}
+                for factor_name, count in negative_counter.most_common(8)
+            ],
+            "risk_level_summary": [
+                {"risk_level": risk_level, "count": count}
+                for risk_level, count in risk_counter.items()
+            ],
+            "student_summaries": summaries
+        }
 
     return build_admin_explainability_summary(db)

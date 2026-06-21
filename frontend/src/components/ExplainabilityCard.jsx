@@ -35,22 +35,27 @@ function ExplainabilityCard({
     );
   }
 
+  const hasConfidence = explanation.confidence !== null && explanation.confidence !== undefined;
+
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-bold uppercase text-indigo-600">
-            Explainable AI
+            Why this recommendation?
           </p>
           <h2 className="mt-1 text-xl font-bold text-slate-950">
             {explanation.prediction_type}
           </h2>
           <p className="mt-2 text-sm font-semibold text-slate-600">
             Result: {explanation.result}
-            {explanation.confidence !== null && explanation.confidence !== undefined
-              ? ` · confidence ${Math.round(explanation.confidence * 100)}%`
-              : ""}
+            {hasConfidence ? ` - confidence ${Math.round(explanation.confidence * 100)}%` : ""}
           </p>
+          {explanation.confidence_label && (
+            <p className="mt-1 text-xs font-bold uppercase text-slate-400">
+              {explanation.confidence_label}
+            </p>
+          )}
         </div>
 
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
@@ -65,9 +70,22 @@ function ExplainabilityCard({
         />
       </div>
 
+      {!compact && explanation.evidence_source && (
+        <div className="mt-4 rounded-xl bg-indigo-50 p-4 text-sm font-semibold leading-6 text-indigo-800">
+          Evidence source: {explanation.evidence_source}
+        </div>
+      )}
+
       {!compact && (
-        <div className="mt-5">
-          <FactorImpactList factors={explanation.top_factors || []} />
+        <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
+          <FactorImpactList
+            title="Positive Factors"
+            factors={explanation.positive_factors || []}
+          />
+          <FactorImpactList
+            title="Negative Factors"
+            factors={explanation.negative_factors || []}
+          />
         </div>
       )}
 

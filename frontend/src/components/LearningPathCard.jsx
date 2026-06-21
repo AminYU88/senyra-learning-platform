@@ -48,7 +48,7 @@ function LearningPathCard({
           </p>
 
           <h2 className="mt-1 text-2xl font-bold text-slate-950">
-            {path.level}
+            {path.recommended_level || path.level}
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -62,6 +62,12 @@ function LearningPathCard({
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <MiniMetric label="Current Level" value={path.current_level || "Not assessed"} />
+        <MiniMetric label="Recommended" value={path.recommended_level || path.level} />
+        <MiniMetric label="Status" value={path.progress_status || `${Math.round(path.progress_percent || 0)}%`} />
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <MiniMetric label="Subject" value={path.subject} />
         <MiniMetric label="Difficulty" value={path.difficulty} className={difficultyClasses[path.difficulty]} />
         <MiniMetric label="Progress" value={`${Math.round(path.progress_percent || 0)}%`} />
@@ -74,7 +80,7 @@ function LearningPathCard({
             Why this path
           </h3>
           <p className="rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-            Quiz average {Math.round(path.signals?.average_quiz_score || 0)}%, engagement {Math.round(path.signals?.engagement_score || 0)}%, flow {Math.round(path.signals?.flow_score || 0)}%, learner type {path.signals?.learner_type || "Not assessed"}.
+            Quiz average {Math.round(path.signals?.average_quiz_score || 0)}%, engagement {Math.round(path.signals?.engagement_score || 0)}%, flow {Math.round(path.signals?.flow_score || 0)}%, weak topics {path.signals?.weak_topic_count || 0}, learner type {path.signals?.learner_type || "Not assessed"}.
           </p>
         </div>
       )}

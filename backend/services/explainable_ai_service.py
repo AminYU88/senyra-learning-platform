@@ -43,8 +43,19 @@ def confidence_ratio(value: float | None) -> float | None:
     return round(value / 100, 2) if value > 1 else round(value, 2)
 
 
+def confidence_label(confidence: float | None) -> str:
+    if confidence is None:
+        return "Not provided by model"
+    if confidence >= 0.8:
+        return "High"
+    if confidence >= 0.6:
+        return "Medium"
+    return "Low"
+
+
 def risk_explanation(db: Session, student: Student) -> dict:
     signals = student_signals(db, student)
+    support_topic_count = len(signals["weak_topics"])
 
     try:
         prediction = predict_current_student_risk(db, student)
@@ -73,8 +84,8 @@ def risk_explanation(db: Session, student: Student) -> dict:
         ),
         factor(
             "Weak topic count",
-            "negative" if len(signals["weak_topics"]) >= 2 else "positive",
-            str(len(signals["weak_topics"]))
+            "negative" if support_topic_count >= 2 else "positive",
+            str(support_topic_count)
         )
     ]
     positive, negative = split_factors(factors)
@@ -98,6 +109,8 @@ def risk_explanation(db: Session, student: Student) -> dict:
         "prediction_type": "Student Risk",
         "result": result,
         "confidence": confidence,
+        "confidence_label": confidence_label(confidence),
+        "evidence_source": "ML risk model plus current quiz, engagement, lesson progress and weak-topic signals",
         "top_factors": factors,
         "positive_factors": positive,
         "negative_factors": negative,
@@ -141,6 +154,8 @@ def cognitive_risk_explanation(db: Session, student: Student) -> dict:
         "prediction_type": "Cognitive Risk",
         "result": result,
         "confidence": confidence_ratio(prediction.get("confidence_score")),
+        "confidence_label": confidence_label(confidence_ratio(prediction.get("confidence_score"))),
+        "evidence_source": "Cognitive risk service output and available protective/risk factors",
         "top_factors": factors,
         "positive_factors": positive,
         "negative_factors": negative,
@@ -163,7 +178,9 @@ def engagement_explanation(db: Session, student: Student) -> dict:
     return {
         "prediction_type": "Engagement",
         "result": result,
-        "confidence": confidence_ratio(engagement),
+        "confidence": None,
+        "confidence_label": "Signal summary",
+        "evidence_source": "Heuristic engagement summary from learning events, quiz attempts and lesson progress",
         "top_factors": factors,
         "positive_factors": positive,
         "negative_factors": negative,
@@ -173,38 +190,47 @@ def engagement_explanation(db: Session, student: Student) -> dict:
 
 
 def weak_topic_explanation(db: Session, student: Student) -> dict:
-    weak_topics = detect_student_weak_topics(db, student)
+    topic_strengths = detect_student_weak_topics(db, student)
+    weak_topics = [
+        topic for topic in topic_strengths
+        if topic.get("status") in ["Weak", "Medium"]
+    ]
 
     if not weak_topics:
         return {
             "prediction_type": "Weak Topic Detection",
-            "result": "No weak topics detected",
+            "result": "No weak or medium topics detected",
             "confidence": None,
+            "confidence_label": "Not provided by model",
+            "evidence_source": "Topic quiz results and stored weak-topic signals",
             "top_factors": [],
             "positive_factors": [],
             "negative_factors": [],
-            "explanation": "No weak topics were detected because there are no repeated low topic scores or stored weak-topic signals.",
-            "suggested_action": "Complete topic quizzes so Senyra can detect support areas."
+            "explanation": "No weak support areas were detected from the current topic evidence.",
+            "suggested_action": "Keep completing topic quizzes so Senyra can maintain an up-to-date strength profile."
         }
 
     strongest_signal = weak_topics[0]
     factors = [
         factor("Average topic score", "negative", percent(strongest_signal["average_score"])),
         factor("Low-score attempts", "negative" if strongest_signal["attempts"] >= 2 else "positive", str(strongest_signal["attempts"])),
+        factor("Topic status", "negative" if strongest_signal["status"] == "Weak" else "positive", strongest_signal["status"]),
         factor("Severity", "negative" if strongest_signal["severity"] == "High" else "positive", strongest_signal["severity"])
     ]
     positive, negative = split_factors(factors)
 
     return {
         "prediction_type": "Weak Topic Detection",
-        "result": f"{strongest_signal['subject']} - {strongest_signal['topic']}",
+        "result": f"{strongest_signal['subject']} - {strongest_signal['topic']} ({strongest_signal['status']})",
         "confidence": None,
+        "confidence_label": "Signal summary",
+        "evidence_source": "Quiz topic scores, attempts, lesson completion, engagement and stored weak-topic signals",
         "top_factors": factors,
         "positive_factors": positive,
         "negative_factors": negative,
         "explanation": (
-            f"{strongest_signal['topic']} was detected because the average score is "
-            f"{round(strongest_signal['average_score'])}% across {strongest_signal['attempts']} low-score attempt(s)."
+            f"{strongest_signal['topic']} is currently {strongest_signal['status'].lower()} because the average score is "
+            f"{round(strongest_signal['average_score'])}% across {strongest_signal['attempts']} recorded attempt(s)."
         ),
         "suggested_action": strongest_signal["recommendation"]
     }
@@ -225,6 +251,8 @@ def learning_path_explanation(db: Session, student: Student) -> dict:
         "prediction_type": "Adaptive Learning Path",
         "result": f"{path['level']} - {path['subject']}",
         "confidence": None,
+        "confidence_label": "Signal summary",
+        "evidence_source": "Adaptive rules using weak topics, risk, cognitive risk, flow, Learning DNA, engagement and quiz performance",
         "top_factors": factors,
         "positive_factors": positive,
         "negative_factors": negative,
@@ -240,7 +268,10 @@ def recommendation_explanation(db: Session, student: Student) -> dict:
         .order_by(RecommendationHistory.created_at.desc())
         .first()
     )
-    weak_topics = detect_student_weak_topics(db, student)
+    weak_topics = [
+        topic for topic in detect_student_weak_topics(db, student)
+        if topic.get("status") in ["Weak", "Medium"]
+    ]
     signals = student_signals(db, student)
     recommendation = latest.recommendation if latest else "Complete a topic quiz and follow your adaptive learning path."
     factors = [
@@ -254,6 +285,8 @@ def recommendation_explanation(db: Session, student: Student) -> dict:
         "prediction_type": "AI Recommendation",
         "result": recommendation,
         "confidence": None,
+        "confidence_label": "Signal summary",
+        "evidence_source": "Latest recommendation history plus weak-topic, risk and engagement signals",
         "top_factors": factors,
         "positive_factors": positive,
         "negative_factors": negative,

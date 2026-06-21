@@ -352,23 +352,37 @@ POST /education/study-plan
 
 ## Screenshots
 
-Add screenshots to the `screenshots/` folder and reference them here.
-
 ### Student Dashboard
 
-<!-- ![Student Dashboard](screenshots/student-dashboard.png) -->
+![Student Dashboard](screenshots/student-dashboard.png)
 
 ### Teacher Dashboard
 
-<!-- ![Teacher Dashboard](screenshots/teacher-dashboard.png) -->
+![Teacher Dashboard](screenshots/teacher-dashboard.png)
 
 ### Admin Dashboard
 
-<!-- ![Admin Dashboard](screenshots/admin-dashboard.png) -->
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
-### AI & Analytics Views
+### Creativity Intelligence Engine
 
-<!-- ![AI Analytics](screenshots/ai-analytics.png) -->
+![Creativity Engine](screenshots/creativity-engine.png)
+
+### Learning DNA Profile
+
+![Learning DNA](screenshots/learning-dna.png)
+
+### Flow State Analytics
+
+![Flow State](screenshots/flow-state.png)
+
+### Cognitive Risk Prediction
+
+![Cognitive Risk](screenshots/cognitive-risk.png)
+
+### Explainable AI Dashboard
+
+![Explainable AI](screenshots/explainable-ai.png)
 
 ---
 

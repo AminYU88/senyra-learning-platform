@@ -1,7 +1,8 @@
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from sqlalchemy.orm import Session
 
+from backend.models.course import Course
 from backend.models.education import SubjectQuizResult, WeakTopic
 from backend.models.learning_event import LearningEvent
 from backend.models.lesson import Lesson
@@ -10,6 +11,7 @@ from backend.models.student import Student
 
 
 LOW_SCORE_THRESHOLD = 60
+MEDIUM_SCORE_THRESHOLD = 80
 
 
 def average(values: list[float]) -> float:
@@ -42,6 +44,14 @@ def student_lesson_completion(db: Session, student_id: int) -> float:
     )
 
     return round((completed_lessons / total_lessons) * 100, 2)
+
+
+def classify_topic_status(average_score: float) -> str:
+    if average_score < LOW_SCORE_THRESHOLD:
+        return "Weak"
+    if average_score < MEDIUM_SCORE_THRESHOLD:
+        return "Medium"
+    return "Strong"
 
 
 def severity_from_signals(
@@ -83,22 +93,62 @@ def severity_from_signals(
     return "Low"
 
 
-def recommendation_for_topic(subject: str, topic: str, severity: str) -> str:
+def recommendation_for_topic(subject: str, topic: str, status: str, severity: str) -> str:
+    if status == "Strong":
+        return f"Keep {topic} in {subject} strong with occasional mixed practice or a stretch task."
+    if status == "Medium":
+        return f"Review {topic} in {subject}, then complete a short quiz to move toward strong."
     if severity == "High":
         return f"Complete {topic} revision in {subject}, review mistakes, and take a practice quiz."
-    if severity == "Medium":
-        return f"Revise {topic} in {subject} with worked examples, then retry a short quiz."
-    return f"Do a quick recap of {topic} in {subject} to strengthen confidence."
+    return f"Revise {topic} in {subject} with worked examples, then retry a short quiz."
+
+
+def lesson_subject_map(db: Session) -> dict[int, str]:
+    lessons = (
+        db.query(Lesson, Course)
+        .outerjoin(Course, Lesson.course_id == Course.id)
+        .all()
+    )
+
+    return {
+        lesson.id: course.title if course else "General Learning"
+        for lesson, course in lessons
+    }
+
+
+def student_subject_lesson_completion(db: Session, student_id: int) -> dict[str, float]:
+    lesson_subjects = lesson_subject_map(db)
+    total_by_subject = defaultdict(int)
+    completed_by_subject = defaultdict(int)
+
+    for subject in lesson_subjects.values():
+        total_by_subject[subject] += 1
+
+    progress_rows = (
+        db.query(LessonProgress)
+        .filter(LessonProgress.student_id == student_id)
+        .all()
+    )
+
+    for progress in progress_rows:
+        subject = lesson_subjects.get(progress.lesson_id)
+        if subject:
+            completed_by_subject[subject] += 1
+
+    return {
+        subject: round((completed_by_subject[subject] / total) * 100, 2)
+        for subject, total in total_by_subject.items()
+        if total
+    }
 
 
 def detect_student_weak_topics(
     db: Session,
     student: Student
 ) -> list[dict]:
-    low_results = (
+    quiz_results = (
         db.query(SubjectQuizResult)
         .filter(SubjectQuizResult.student_id == student.id)
-        .filter(SubjectQuizResult.score < LOW_SCORE_THRESHOLD)
         .all()
     )
     stored_topics = (
@@ -110,7 +160,7 @@ def detect_student_weak_topics(
     grouped_scores = defaultdict(list)
     latest_dates = {}
 
-    for result in low_results:
+    for result in quiz_results:
         key = (result.subject, result.topic)
         grouped_scores[key].append(result.score)
         latest_dates[key] = max(
@@ -133,12 +183,15 @@ def detect_student_weak_topics(
             grouped_scores[key] = []
 
     engagement_score = student_engagement_score(db, student.id)
-    lesson_completion = student_lesson_completion(db, student.id)
+    overall_lesson_completion = student_lesson_completion(db, student.id)
+    subject_completion = student_subject_lesson_completion(db, student.id)
     detected_topics = []
 
     for (subject, topic), scores in grouped_scores.items():
         avg_score = average(scores) if scores else round((1 - confidence_by_topic[(subject, topic)]) * 100, 2)
         attempts = len(scores)
+        status = classify_topic_status(avg_score)
+        lesson_completion = subject_completion.get(subject, overall_lesson_completion)
         severity = severity_from_signals(
             avg_score,
             attempts,
@@ -154,8 +207,11 @@ def detect_student_weak_topics(
             "topic": topic,
             "average_score": avg_score,
             "attempts": attempts,
+            "status": status,
             "severity": severity,
-            "recommendation": recommendation_for_topic(subject, topic, severity),
+            "engagement_score": engagement_score,
+            "lesson_completion": lesson_completion,
+            "recommendation": recommendation_for_topic(subject, topic, status, severity),
             "last_detected_at": latest_dates.get((subject, topic))
         })
 
@@ -168,6 +224,7 @@ def detect_student_weak_topics(
     return sorted(
         detected_topics,
         key=lambda item: (
+            0 if item["status"] == "Weak" else 1 if item["status"] == "Medium" else 2,
             severity_rank.get(item["severity"], 3),
             item["average_score"],
             -item["attempts"]
@@ -207,11 +264,18 @@ def build_group_weak_topic_summary(
     for (subject, topic), items in grouped.items():
         scores = [item["average_score"] for item in items]
         attempts = sum(item["attempts"] for item in items)
+        average_score = average(scores)
+        status_counts = Counter(item["status"] for item in items)
+        topic_status = classify_topic_status(average_score)
         highest_severity = sorted(
             [item["severity"] for item in items],
             key=lambda value: severity_rank.get(value, 3)
         )[0]
 
+        support_items = [
+            item for item in items
+            if item["status"] in ["Weak", "Medium"]
+        ]
         student_summaries = [
             {
                 "student_id": item["student_id"],
@@ -219,7 +283,7 @@ def build_group_weak_topic_summary(
                 "weak_topics": [item]
             }
             for item in sorted(
-                items,
+                support_items,
                 key=lambda value: (
                     severity_rank.get(value["severity"], 3),
                     value["average_score"]
@@ -230,16 +294,21 @@ def build_group_weak_topic_summary(
         topics.append({
             "subject": subject,
             "topic": topic,
-            "average_score": average(scores),
+            "average_score": average_score,
             "attempts": attempts,
+            "status": topic_status,
             "severity": highest_severity,
-            "recommendation": recommendation_for_topic(subject, topic, highest_severity),
+            "recommendation": recommendation_for_topic(subject, topic, topic_status, highest_severity),
+            "weak_students": status_counts.get("Weak", 0),
+            "medium_students": status_counts.get("Medium", 0),
+            "strong_students": status_counts.get("Strong", 0),
             "struggling_students": student_summaries
         })
 
     topics = sorted(
         topics,
         key=lambda item: (
+            0 if item["status"] == "Weak" else 1 if item["status"] == "Medium" else 2,
             severity_rank.get(item["severity"], 3),
             item["average_score"],
             -len(item["struggling_students"])
@@ -252,6 +321,9 @@ def build_group_weak_topic_summary(
             item for item in topics
             if item["severity"] == "High"
         ]),
+        "weak_topics": len([item for item in topics if item["status"] == "Weak"]),
+        "medium_topics": len([item for item in topics if item["status"] == "Medium"]),
+        "strong_topics": len([item for item in topics if item["status"] == "Strong"]),
         "topics": topics
     }
 

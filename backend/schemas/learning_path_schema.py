@@ -16,19 +16,32 @@ class LearningPathStep(BaseModel):
     estimated_minutes: int
 
 
+class LearningPathTopic(BaseModel):
+    subject: str
+    topic: str
+    difficulty: str
+    status: str
+    reason: str
+    recommended_activity: str
+
+
 class LearningPathResponse(BaseModel):
     student_id: int
     student: str
     level: str
+    current_level: str
+    recommended_level: str
     subject: str
     recommended_subjects: list[str]
     next_topics: list[str]
+    next_topic_cards: list[LearningPathTopic] = []
     difficulty: str
     reason: str
     daily_tasks: list[str]
     weekly_plan: list[str]
     estimated_completion_time: str
     progress_percent: float
+    progress_status: str
     signals: dict
     learning_path: list[LearningPathStep]
 

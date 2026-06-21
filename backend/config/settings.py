@@ -35,11 +35,20 @@ def comma_list(value: str | None, default: list[str] | None = None) -> list[str]
 
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./senyra.db")
+DATABASE_URL = os.getenv("DATABASE_URL") or "sqlite:///./senyra.db"
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
-CORS_ORIGINS = comma_list(os.getenv("CORS_ORIGINS"), [])
+DEFAULT_DEV_CORS_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
+]
+CORS_ORIGINS = comma_list(
+    os.getenv("CORS_ORIGINS"),
+    [] if ENVIRONMENT.lower() == "production" else DEFAULT_DEV_CORS_ORIGINS
+)
 
 
 if not SECRET_KEY:

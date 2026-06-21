@@ -112,12 +112,12 @@ function WeakTopicsPage() {
             value={summary?.total_topics || 0}
           />
           <Metric
-            label="High Severity"
-            value={summary?.high_severity_topics || 0}
+            label="Weak Topics"
+            value={summary?.weak_topics || summary?.high_severity_topics || 0}
           />
           <Metric
-            label={role === "admin" ? "Scope" : "Scope"}
-            value={role === "admin" ? "Platform" : "Class"}
+            label="Medium / Strong"
+            value={`${summary?.medium_topics || 0} / ${summary?.strong_topics || 0}`}
           />
         </section>
       )}
