@@ -1,0 +1,81 @@
+id,student_id,event_type,event_value,timestamp
+1,1,video_watch,,16:12.3
+2,1,quiz_attempt,,19:45.5
+3,1,coding_practice,,20:07.5
+4,1,video_watch,Python Video,49:40.6
+5,1,video_watch,Python Video,49:42.2
+6,1,video_watch,Python Video,49:43.2
+7,2,video,Python Video,08:23.9
+8,2,video_watch,Python Video,33:54.2
+9,2,quiz_attempt,Quiz Completed,14:30.8
+10,2,quiz_attempt,Quiz Completed,14:32.3
+11,2,video_watch,Python Video,14:33.1
+12,2,coding_practice,Coding Practice,14:40.3
+13,2,video_watch,Introduction to Python,44:41.9
+14,2,video_watch,Introduction to Python,44:44.3
+15,2,video_watch,Introduction to Python,44:48.9
+16,2,quiz_attempt,Quiz Completed,22:22.5
+17,2,quiz_attempt,Quiz score: 100%,50:33.7
+18,2,video_watch,Introduction to Python,29:25.5
+19,2,video_watch,Introduction to Python,29:29.3
+20,2,quiz_attempt,Quiz score: 100%,56:46.2
+21,2,quiz_attempt,Quiz score: 83%,12:37.8
+22,2,video_watch,Introduction to Python,05:26.5
+23,2,video_watch,Introduction to Python,05:27.4
+24,5,video_watch,demo-event-1,48:20.7
+25,5,quiz_attempt,demo-event-2,48:20.7
+26,5,coding_practice,demo-event-3,48:20.7
+27,5,lesson_complete,demo-event-4,48:20.7
+28,5,resource_view,demo-event-5,48:20.7
+29,5,video_watch,demo-event-6,48:20.7
+30,5,quiz_attempt,demo-event-7,48:20.7
+31,5,coding_practice,demo-event-8,48:20.7
+32,5,lesson_complete,demo-event-9,48:20.7
+33,5,resource_view,demo-event-10,48:20.7
+34,5,video_watch,demo-event-11,48:20.7
+35,5,quiz_attempt,demo-event-12,48:20.7
+36,5,coding_practice,demo-event-13,48:20.7
+37,5,lesson_complete,demo-event-14,48:20.7
+38,5,resource_view,demo-event-15,48:20.7
+39,5,video_watch,demo-event-16,48:20.7
+40,5,quiz_attempt,demo-event-17,48:20.7
+41,5,coding_practice,demo-event-18,48:20.7
+42,6,video_watch,demo-event-1,48:20.7
+43,6,quiz_attempt,demo-event-2,48:20.7
+44,6,coding_practice,demo-event-3,48:20.7
+45,6,lesson_complete,demo-event-4,48:20.7
+46,6,resource_view,demo-event-5,48:20.7
+47,6,video_watch,demo-event-6,48:20.7
+48,6,quiz_attempt,demo-event-7,48:20.7
+49,6,coding_practice,demo-event-8,48:20.7
+50,6,lesson_complete,demo-event-9,48:20.7
+51,6,resource_view,demo-event-10,48:20.7
+52,7,video_watch,demo-event-1,48:20.7
+53,7,quiz_attempt,demo-event-2,48:20.7
+54,7,coding_practice,demo-event-3,48:20.7
+55,7,lesson_complete,demo-event-4,48:20.7
+56,7,resource_view,demo-event-5,48:20.7
+57,7,video_watch,demo-event-6,48:20.7
+58,7,quiz_attempt,demo-event-7,48:20.7
+59,7,coding_practice,demo-event-8,48:20.7
+60,7,lesson_complete,demo-event-9,48:20.7
+61,7,resource_view,demo-event-10,48:20.7
+62,7,video_watch,demo-event-11,48:20.7
+63,7,quiz_attempt,demo-event-12,48:20.7
+64,7,coding_practice,demo-event-13,48:20.7
+65,7,lesson_complete,demo-event-14,48:20.7
+66,7,resource_view,demo-event-15,48:20.7
+67,7,video_watch,demo-event-16,48:20.7
+68,7,quiz_attempt,demo-event-17,48:20.7
+69,7,coding_practice,demo-event-18,48:20.7
+70,7,lesson_complete,demo-event-19,48:20.7
+71,7,resource_view,demo-event-20,48:20.7
+72,7,video_watch,demo-event-21,48:20.7
+73,7,quiz_attempt,demo-event-22,48:20.7
+74,8,video_watch,demo-event-1,48:20.7
+75,8,quiz_attempt,demo-event-2,48:20.7
+76,8,coding_practice,demo-event-3,48:20.7
+77,8,lesson_complete,demo-event-4,48:20.7
+78,8,resource_view,demo-event-5,48:20.7
+79,8,video_watch,demo-event-6,48:20.7
+80,8,quiz_attempt,demo-event-7,48:20.7
