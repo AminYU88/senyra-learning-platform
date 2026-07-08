@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 
 from backend.database.connection import get_db
 
+from backend.auth.role_checker import require_roles
+
 from backend.models.student import Student
 from backend.models.learning_event import LearningEvent
 from backend.models.quiz import QuizAttempt
@@ -10,29 +12,24 @@ from backend.models.lesson import Lesson
 from backend.models.lesson_progress import LessonProgress
 from backend.models.class_group import ClassGroup, ClassEnrollment
 
-from backend.auth.role_checker import require_roles
-
 
 router = APIRouter(
     prefix="/teacher",
-    tags=["Teacher"]
+    tags=["Teacher"],
 )
 
 
-def get_teacher_students(
-    db: Session,
-    teacher_id: int
-):
+def get_teacher_students(db: Session, teacher_id: int) -> list[Student]:
     classes = (
         db.query(ClassGroup)
         .filter(ClassGroup.teacher_id == teacher_id)
         .all()
     )
 
-    class_ids = [
-        class_group.id
-        for class_group in classes
-    ]
+    class_ids = [class_group.id for class_group in classes]
+
+    if not class_ids:
+        return []
 
     enrollments = (
         db.query(ClassEnrollment)
@@ -40,26 +37,24 @@ def get_teacher_students(
         .all()
     )
 
-    student_ids = [
-        enrollment.student_id
-        for enrollment in enrollments
-    ]
+    student_ids = [enrollment.student_id for enrollment in enrollments]
 
-    students = (
+    if not student_ids:
+        return []
+
+    return (
         db.query(Student)
         .filter(Student.id.in_(student_ids))
         .filter(Student.role == "student")
         .all()
     )
 
-    return students
-
 
 def build_student_progress(
     db: Session,
     student: Student,
-    total_lessons: int
-):
+    total_lessons: int,
+) -> dict:
     total_events = (
         db.query(LearningEvent)
         .filter(LearningEvent.student_id == student.id)
@@ -77,7 +72,7 @@ def build_student_progress(
     if total_lessons > 0:
         lesson_progress = round(
             (completed_lessons / total_lessons) * 100,
-            2
+            2,
         )
 
     quiz_attempts = (
@@ -88,10 +83,11 @@ def build_student_progress(
 
     average_quiz_score = 0
 
-    if len(quiz_attempts) > 0:
+    if quiz_attempts:
         average_quiz_score = round(
-            sum(attempt.score for attempt in quiz_attempts) / len(quiz_attempts),
-            2
+            sum(float(attempt.score or 0) for attempt in quiz_attempts)
+            / len(quiz_attempts),
+            2,
         )
 
     engagement_score = min(total_events * 10, 100)
@@ -113,14 +109,14 @@ def build_student_progress(
         "average_quiz_score": average_quiz_score,
         "completed_lessons": completed_lessons,
         "total_lessons": total_lessons,
-        "lesson_progress": lesson_progress
+        "lesson_progress": lesson_progress,
     }
 
 
 @router.get("/student-progress")
 def teacher_student_progress(
     db: Session = Depends(get_db),
-    current_user: Student = Depends(require_roles(["teacher", "admin"]))
+    current_user: Student = Depends(require_roles("teacher", "admin")),
 ):
     total_lessons = db.query(Lesson).count()
 
@@ -133,14 +129,14 @@ def teacher_student_progress(
     else:
         students = get_teacher_students(
             db=db,
-            teacher_id=current_user.id
+            teacher_id=current_user.id,
         )
 
     return [
         build_student_progress(
             db=db,
             student=student,
-            total_lessons=total_lessons
+            total_lessons=total_lessons,
         )
         for student in students
     ]
@@ -149,39 +145,42 @@ def teacher_student_progress(
 @router.get("/class-summary")
 def teacher_class_summary(
     db: Session = Depends(get_db),
-    current_user: Student = Depends(require_roles(["teacher", "admin"]))
+    current_user: Student = Depends(require_roles("teacher", "admin")),
 ):
     progress = teacher_student_progress(
         db=db,
-        current_user=current_user
+        current_user=current_user,
     )
 
     total_students = len(progress)
 
-    high_risk = len([
-        student for student in progress
-        if student["risk_level"] == "High"
-    ])
+    high_risk_students = len(
+        [
+            student
+            for student in progress
+            if student["risk_level"] == "High"
+        ]
+    )
 
     average_progress = 0
-
-    if total_students > 0:
-        average_progress = round(
-            sum(student["lesson_progress"] for student in progress) / total_students,
-            2
-        )
-
     average_quiz_score = 0
 
     if total_students > 0:
+        average_progress = round(
+            sum(student["lesson_progress"] for student in progress)
+            / total_students,
+            2,
+        )
+
         average_quiz_score = round(
-            sum(student["average_quiz_score"] for student in progress) / total_students,
-            2
+            sum(student["average_quiz_score"] for student in progress)
+            / total_students,
+            2,
         )
 
     return {
         "total_students": total_students,
-        "high_risk_students": high_risk,
+        "high_risk_students": high_risk_students,
         "average_progress": average_progress,
-        "average_quiz_score": average_quiz_score
+        "average_quiz_score": average_quiz_score,
     }
