@@ -1,29 +1,67 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+
+import {
+  clearAuthStorage,
+  getDashboardPath,
+  getStoredUser,
+  getToken,
+} from "../api/client";
+
 
 function RoleRoute({
-children,
-allowedRoles
+  children,
+  allowedRoles = [],
 }) {
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
+  const location = useLocation();
 
-if (!token) {
-return <Navigate to="/login" replace />;
-}
+  const token = getToken();
+  const user = getStoredUser();
 
-if (!allowedRoles.includes(role)) {
-if (role === "admin") {
-return <Navigate to="/admin" replace />;
-}
+  // User not logged in
+  if (!token || !user) {
+    clearAuthStorage();
 
-if (role === "teacher") {
-return <Navigate to="/teacher" replace />;
-}
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{
+          from: location,
+        }}
+      />
+    );
+  }
 
-return <Navigate to="/dashboard" replace />;
-}
+  // Invalid user object
+  if (
+    typeof user !== "object" ||
+    !user.role ||
+    !user.email
+  ) {
+    clearAuthStorage();
 
-return children;
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+
+  // Route is restricted
+  if (
+    allowedRoles.length > 0 &&
+    !allowedRoles.includes(user.role)
+  ) {
+    return (
+      <Navigate
+        to={getDashboardPath(user.role)}
+        replace
+      />
+    );
+  }
+
+  return children;
 }
 
 export default RoleRoute;

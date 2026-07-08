@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import {
-BrowserRouter,
-Routes,
-Route,
+  BrowserRouter,
+  Routes,
+  Route,
 } from "react-router-dom";
 
 import "@fontsource/inter";
@@ -70,464 +70,469 @@ import AdminAuditLogsPage from "./pages/AdminAuditLogsPage";
 import AdminAdvancedAnalyticsPage from "./pages/AdminAdvancedAnalyticsPage";
 
 
-ReactDOM.createRoot(
-document.getElementById("root")
-).render(
-<React.StrictMode>
-<ErrorBoundary>
-<BrowserRouter>
-<Routes>
-
-<Route path="/" element={<App />} />
-
-<Route path="/login" element={<LoginPage />} />
-<Route path="/register" element={<RegisterPage />} />
-
-<Route
-path="/account-settings"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<AccountSettingsPage />
-</RoleRoute>
+function ProtectedPage({ allowedRoles, children }) {
+  return (
+    <RoleRoute allowedRoles={allowedRoles}>
+      {children}
+    </RoleRoute>
+  );
 }
-/>
 
-<Route
-path="/chatbot"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<ChatbotPage />
-</RoleRoute>
-}
-/>
 
-<Route
-path="/ai-tutor"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<AITutorPage />
-</RoleRoute>
-}
-/>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
 
-<Route
-path="/learn/mathematics"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<MathematicsLearningPage />
-</RoleRoute>
-}
-/>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-<Route
-path="/learn/english-language"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<EnglishLanguageLearningPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/account-settings"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <AccountSettingsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/learn/english-literature"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<EnglishLiteratureLearningPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/chatbot"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <ChatbotPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/education/analytics"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<EducationAnalyticsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/ai-tutor"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <AITutorPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/study-planner"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<StudyPlannerPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/learn/mathematics"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <MathematicsLearningPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/quiz-generator"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<QuizGeneratorPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/learn/english-language"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <EnglishLanguageLearningPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/datasets"
-element={
-<RoleRoute allowedRoles={["admin", "teacher"]}>
-<DatasetsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/learn/english-literature"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <EnglishLiteratureLearningPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/ml/engagement"
-element={
-<RoleRoute allowedRoles={["admin", "teacher"]}>
-<EngagementPredictionPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/education/analytics"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <EducationAnalyticsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/recommendations"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<RecommendationsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/study-planner"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <StudyPlannerPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/ml/analytics"
-element={
-<RoleRoute allowedRoles={["admin", "teacher"]}>
-<MLAnalyticsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/quiz-generator"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <QuizGeneratorPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/ml/student-risk"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<StudentRiskPredictionPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/datasets"
+            element={
+              <ProtectedPage allowedRoles={["admin", "teacher"]}>
+                <DatasetsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/cognitive-risk"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<CognitiveRiskPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/ml/engagement"
+            element={
+              <ProtectedPage allowedRoles={["admin", "teacher"]}>
+                <EngagementPredictionPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/creativity-lab"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<CreativityAssessmentPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/recommendations"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <RecommendationsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/creativity-lab/results"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<CreativityResultsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/ml/analytics"
+            element={
+              <ProtectedPage allowedRoles={["admin", "teacher"]}>
+                <MLAnalyticsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/learning-dna"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<LearningDNAPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/ml/student-risk"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <StudentRiskPredictionPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/learning-dna/results"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<LearningDNAResultsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/cognitive-risk"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <CognitiveRiskPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/flow-state"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<FlowStatePage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/creativity-lab"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <CreativityAssessmentPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/explainable-ai"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<ExplainableAIDashboard />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/creativity-lab/results"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <CreativityResultsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/weak-topics"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<WeakTopicsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/learning-dna"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <LearningDNAPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/dashboard"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<DashboardPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/learning-dna/results"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <LearningDNAResultsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/courses"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<CoursesPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/flow-state"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <FlowStatePage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/quizzes"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<QuizPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/explainable-ai"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <ExplainableAIDashboard />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/quiz-history"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<QuizHistoryPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/weak-topics"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <WeakTopicsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/certificate"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<CertificatePage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <DashboardPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/leaderboard"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<LeaderboardPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/courses"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <CoursesPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/learning-path"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<LearningPathPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/quizzes"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <QuizPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/profile"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<ProfilePage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/quiz-history"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <QuizHistoryPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/achievements"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<AchievementsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/certificate"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <CertificatePage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/recommendation-history"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<RecommendationHistoryPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/leaderboard"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <LeaderboardPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/notifications"
-element={
-<RoleRoute allowedRoles={["student", "teacher", "admin"]}>
-<NotificationsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/learning-path"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <LearningPathPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/feedback"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<StudentFeedbackPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/profile"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <ProfilePage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/student/feedback"
-element={
-<RoleRoute allowedRoles={["student"]}>
-<StudentFeedbackPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/achievements"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <AchievementsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/teacher"
-element={
-<RoleRoute allowedRoles={["teacher"]}>
-<TeacherDashboard />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/recommendation-history"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <RecommendationHistoryPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/teacher/notes"
-element={
-<RoleRoute allowedRoles={["teacher"]}>
-<TeacherNotesPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
+                <NotificationsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/teacher/interventions"
-element={
-<RoleRoute allowedRoles={["teacher"]}>
-<TeacherInterventionsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <StudentFeedbackPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/teacher/feedback"
-element={
-<RoleRoute allowedRoles={["teacher"]}>
-<TeacherFeedbackPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/student/feedback"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <StudentFeedbackPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminDashboard />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/teacher"
+            element={
+              <ProtectedPage allowedRoles={["teacher"]}>
+                <TeacherDashboard />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/courses"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminCoursesPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/teacher/notes"
+            element={
+              <ProtectedPage allowedRoles={["teacher"]}>
+                <TeacherNotesPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/classes"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminClassesPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/teacher/interventions"
+            element={
+              <ProtectedPage allowedRoles={["teacher"]}>
+                <TeacherInterventionsPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/users"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminUsersPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/teacher/feedback"
+            element={
+              <ProtectedPage allowedRoles={["teacher"]}>
+                <TeacherFeedbackPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/quiz-history"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminQuizHistoryPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/certificates"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminCertificatesPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/admin/courses"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminCoursesPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/achievements"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminAchievementsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/admin/classes"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminClassesPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/reports"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminReportsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminUsersPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/audit-logs"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminAuditLogsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/admin/quiz-history"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminQuizHistoryPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route
-path="/admin/advanced-analytics"
-element={
-<RoleRoute allowedRoles={["admin"]}>
-<AdminAdvancedAnalyticsPage />
-</RoleRoute>
-}
-/>
+          <Route
+            path="/admin/certificates"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminCertificatesPage />
+              </ProtectedPage>
+            }
+          />
 
-<Route path="*" element={<NotFoundPage />} />
+          <Route
+            path="/admin/achievements"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminAchievementsPage />
+              </ProtectedPage>
+            }
+          />
 
-</Routes>
-</BrowserRouter>
-</ErrorBoundary>
-</React.StrictMode>
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminReportsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/admin/audit-logs"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminAuditLogsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/admin/advanced-analytics"
+            element={
+              <ProtectedPage allowedRoles={["admin"]}>
+                <AdminAdvancedAnalyticsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </ErrorBoundary>
+  </React.StrictMode>
 );

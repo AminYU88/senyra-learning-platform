@@ -1,22 +1,39 @@
 import { Navigate } from "react-router-dom";
 
-function App() {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+import {
+  clearAuthStorage,
+  getDashboardPath,
+  getStoredUser,
+  getToken,
+} from "./api/client";
 
-  if (!token) {
+function App() {
+  const token = getToken();
+  const user = getStoredUser();
+
+  // User is not authenticated
+  if (!token || !user) {
+    clearAuthStorage();
     return <Navigate to="/login" replace />;
   }
 
-  if (role === "admin") {
-    return <Navigate to="/admin" replace />;
+  // User object is invalid
+  if (
+    typeof user !== "object" ||
+    !user.role ||
+    !user.email
+  ) {
+    clearAuthStorage();
+    return <Navigate to="/login" replace />;
   }
 
-  if (role === "teacher") {
-    return <Navigate to="/teacher" replace />;
-  }
-
-  return <Navigate to="/dashboard" replace />;
+  // Redirect user to the correct dashboard
+  return (
+    <Navigate
+      to={getDashboardPath(user.role)}
+      replace
+    />
+  );
 }
 
 export default App;
