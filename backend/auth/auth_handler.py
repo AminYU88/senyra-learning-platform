@@ -22,7 +22,6 @@ pwd_context = CryptContext(
 )
 
 
-# Swagger Authorize now uses /account/token
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/account/token",
 )
@@ -34,15 +33,27 @@ def hash_password(password: str) -> str:
 
 def verify_password(
     plain_password: str,
-    hashed_password: str,
+    stored_password: str,
 ) -> bool:
-    if not plain_password or not hashed_password:
+    """
+    Verifies both:
+    - proper bcrypt hashed passwords
+    - old plain-text seeded passwords
+
+    This prevents Render login from crashing with 500 if old demo users
+    were seeded with plain-text passwords.
+    """
+
+    if not plain_password or not stored_password:
         return False
 
-    return pwd_context.verify(
-        plain_password,
-        hashed_password,
-    )
+    try:
+        return pwd_context.verify(
+            plain_password,
+            stored_password,
+        )
+    except Exception:
+        return plain_password == stored_password
 
 
 def create_access_token(
