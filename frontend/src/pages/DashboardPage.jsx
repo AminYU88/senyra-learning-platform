@@ -8,8 +8,9 @@ import {
   FaChartLine,
   FaClock,
   FaGraduationCap,
-  FaTrophy
+  FaTrophy,
 } from "react-icons/fa";
+
 import {
   Bar,
   BarChart,
@@ -19,13 +20,14 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 
 import LoadingSpinner from "../components/LoadingSpinner";
 import ExplainabilityCard from "../components/ExplainabilityCard";
 import LearningPathCard from "../components/LearningPathCard";
 import StudentShell from "../components/StudentShell";
+
 import CognitiveRiskWidget from "../components/dashboard/CognitiveRiskWidget";
 import CreativityScoreWidget from "../components/dashboard/CreativityScoreWidget";
 import FlowScoreWidget from "../components/dashboard/FlowScoreWidget";
@@ -33,22 +35,27 @@ import LearningDNAWidget from "../components/dashboard/LearningDNAWidget";
 import LearningStreakCard from "../components/dashboard/LearningStreakCard";
 import RiskPredictorWidget from "../components/dashboard/RiskPredictorWidget";
 import WeakTopicsWidget from "../components/dashboard/WeakTopicsWidget";
-import { apiRequest } from "../api/client";
+
+import { apiJson } from "../api/client";
+
 import {
   getLearningStreak,
   getQuizPerformance,
-  getRiskSummary,
 } from "../api/dashboardApi";
+
 import { getMyWeakTopics } from "../api/weakTopicApi";
 import { getCreativitySummary } from "../api/creativityApi";
+
 import {
   getLearningDNAProfile,
-  getLearningDNARecommendations
+  getLearningDNARecommendations,
 } from "../api/learningDnaApi";
+
 import {
   getFlowSummary,
-  getFlowToday
+  getFlowToday,
 } from "../api/flowApi";
+
 import { getCognitiveRiskSummary } from "../api/cognitiveRiskApi";
 import { getMyExplainableAi } from "../api/explainableAiApi";
 import { getMyLearningPath } from "../api/learningPathApi";
@@ -59,21 +66,24 @@ function DashboardPage() {
 
   const [student, setStudent] = useState(null);
   const [summary, setSummary] = useState({ total_events: 0 });
+
   const [progress, setProgress] = useState({
     total_lessons: 0,
     completed_lessons: 0,
-    progress_percentage: 0
+    progress_percentage: 0,
   });
+
   const [risk, setRisk] = useState({
     engagement_score: 0,
     risk_level: "Unknown",
     progress_analytics: {
       total_lessons: 0,
       completed_lessons: 0,
-      lesson_progress: 0
+      lesson_progress: 0,
     },
-    ai_insights: []
+    ai_insights: [],
   });
+
   const [recommendations, setRecommendations] = useState([]);
   const [quizPerformance, setQuizPerformance] = useState(null);
   const [streakData, setStreakData] = useState(null);
@@ -87,7 +97,9 @@ function DashboardPage() {
   const [cognitiveRiskSummary, setCognitiveRiskSummary] = useState(null);
   const [learningPath, setLearningPath] = useState(null);
   const [explainability, setExplainability] = useState(null);
+
   const [widgetLoading, setWidgetLoading] = useState(true);
+
   const [widgetErrors, setWidgetErrors] = useState({
     streak: "",
     weakTopics: "",
@@ -95,77 +107,106 @@ function DashboardPage() {
     creativity: "",
     learningDna: "",
     flow: "",
-    cognitiveRisk: ""
+    cognitiveRisk: "",
   });
+
   const [error, setError] = useState("");
 
   const loadDashboard = async () => {
-    await Promise.all([
-      fetchStudent(),
-      fetchSummary(),
-      fetchProgress(),
-      fetchRiskPrediction(),
-      fetchRecommendations(),
-      fetchQuizPerformance(),
-      fetchDashboardWidgets()
-    ]);
+    try {
+      await Promise.allSettled([
+        fetchStudent(),
+        fetchSummary(),
+        fetchProgress(),
+        fetchRiskPrediction(),
+        fetchRecommendations(),
+        fetchQuizPerformance(),
+        fetchDashboardWidgets(),
+      ]);
+    } catch (error) {
+      console.log("Dashboard load error:", error);
+      setError("Could not load dashboard.");
+    }
   };
 
   const fetchStudent = async () => {
     try {
-      const response = await apiRequest("/me");
-      if (!response) return;
+      const result = await apiJson("/account/me");
 
-      const data = await response.json();
-      if (response.ok) {
-        setStudent(data);
-      } else {
-        setError("Could not load student profile.");
+      if (result?.data) {
+        setStudent(result.data);
       }
     } catch (error) {
-      console.log(error);
-      setError(error.message || "Could not connect to backend.");
+      console.log("Student profile error:", error);
+      setError("Could not load student profile.");
     }
   };
 
   const fetchSummary = async () => {
-    const response = await apiRequest("/dashboard/summary");
-    if (!response) return;
-    if (response.ok) setSummary(await response.json());
+    try {
+      const result = await apiJson("/dashboard/summary");
+
+      if (result?.data) {
+        setSummary(result.data);
+      }
+    } catch (error) {
+      console.log("Summary error:", error);
+    }
   };
 
   const fetchProgress = async () => {
-    const response = await apiRequest("/progress/summary");
-    if (!response) return;
-    if (response.ok) setProgress(await response.json());
+    try {
+      const result = await apiJson("/progress/summary");
+
+      if (result?.data) {
+        setProgress(result.data);
+      }
+    } catch (error) {
+      console.log("Progress error:", error);
+    }
   };
 
   const fetchRiskPrediction = async () => {
-    const response = await apiRequest("/ml/risk-prediction");
-    if (!response) return;
+    try {
+      const result = await apiJson("/ml/risk-prediction");
 
-    if (response.ok) {
-      const data = await response.json();
-      setRisk({
+      if (!result?.data) return;
+
+      const data = result.data;
+
+      const safeRisk = {
         engagement_score: data.engagement_score ?? 0,
         risk_level: data.risk_level ?? "Unknown",
         progress_analytics: data.progress_analytics ?? {
           total_lessons: 0,
           completed_lessons: 0,
-          lesson_progress: 0
+          lesson_progress: 0,
         },
-        ai_insights: data.ai_insights ?? []
+        ai_insights: data.ai_insights ?? [],
+      };
+
+      setRisk(safeRisk);
+
+      setRiskSummary({
+        risk_level: safeRisk.risk_level,
+        engagement_score: safeRisk.engagement_score,
+        ai_insights: safeRisk.ai_insights,
+        progress_analytics: safeRisk.progress_analytics,
       });
+    } catch (error) {
+      console.log("Risk prediction error:", error);
     }
   };
 
   const fetchRecommendations = async () => {
-    const response = await apiRequest("/recommendations/");
-    if (!response) return;
+    try {
+      const result = await apiJson("/recommendations/");
 
-    if (response.ok) {
-      const data = await response.json();
-      setRecommendations(data.recommendations || []);
+      if (result?.data) {
+        setRecommendations(result.data.recommendations || []);
+      }
+    } catch (error) {
+      console.log("Recommendations error:", error);
     }
   };
 
@@ -174,7 +215,7 @@ function DashboardPage() {
       const data = await getQuizPerformance();
       setQuizPerformance(data);
     } catch (error) {
-      console.log(error);
+      console.log("Quiz performance error:", error);
     }
   };
 
@@ -188,13 +229,23 @@ function DashboardPage() {
       creativity: "",
       learningDna: "",
       flow: "",
-      cognitiveRisk: ""
+      cognitiveRisk: "",
     };
 
-    const [streakResult, weakTopicResult, riskResult, creativityResult, dnaProfileResult, dnaRecommendationsResult, flowTodayResult, flowSummaryResult, cognitiveRiskResult, learningPathResult, explainabilityResult] = await Promise.allSettled([
+    const [
+      streakResult,
+      weakTopicResult,
+      creativityResult,
+      dnaProfileResult,
+      dnaRecommendationsResult,
+      flowTodayResult,
+      flowSummaryResult,
+      cognitiveRiskResult,
+      learningPathResult,
+      explainabilityResult,
+    ] = await Promise.allSettled([
       getLearningStreak(),
       getMyWeakTopics(),
-      getRiskSummary(),
       getCreativitySummary(),
       getLearningDNAProfile(),
       getLearningDNARecommendations(),
@@ -202,7 +253,7 @@ function DashboardPage() {
       getFlowSummary(),
       getCognitiveRiskSummary(),
       getMyLearningPath(),
-      getMyExplainableAi()
+      getMyExplainableAi(),
     ]);
 
     if (streakResult.status === "fulfilled") {
@@ -212,15 +263,13 @@ function DashboardPage() {
     }
 
     if (weakTopicResult.status === "fulfilled") {
-      setWeakTopics(weakTopicResult.value.weak_topics || weakTopicResult.value || []);
+      setWeakTopics(
+        weakTopicResult.value.weak_topics ||
+        weakTopicResult.value ||
+        []
+      );
     } else {
       nextErrors.weakTopics = "Could not load weak topics.";
-    }
-
-    if (riskResult.status === "fulfilled") {
-      setRiskSummary(riskResult.value);
-    } else {
-      nextErrors.risk = "Could not load risk summary.";
     }
 
     if (creativityResult.status === "fulfilled") {
@@ -247,8 +296,6 @@ function DashboardPage() {
 
     if (flowSummaryResult.status === "fulfilled") {
       setFlowSummary(flowSummaryResult.value);
-    } else {
-      nextErrors.flow = "Could not load Flow State summary.";
     }
 
     if (cognitiveRiskResult.status === "fulfilled") {
@@ -278,18 +325,47 @@ function DashboardPage() {
   }
 
   const progressAnalytics = risk.progress_analytics || {};
-  const completion = progressAnalytics.lesson_progress || progress.progress?.progress_percentage || progress.progress_percentage || 0;
-  const completedLessons = progressAnalytics.completed_lessons || progress.progress?.completed_lessons || progress.completed_lessons || 0;
-  const totalLessons = progressAnalytics.total_lessons || progress.progress?.total_lessons || progress.total_lessons || 0;
+
+  const completion =
+    progressAnalytics.lesson_progress ||
+    progress.progress?.progress_percentage ||
+    progress.progress_percentage ||
+    0;
+
+  const completedLessons =
+    progressAnalytics.completed_lessons ||
+    progress.progress?.completed_lessons ||
+    progress.completed_lessons ||
+    0;
+
+  const totalLessons =
+    progressAnalytics.total_lessons ||
+    progress.progress?.total_lessons ||
+    progress.total_lessons ||
+    0;
+
   const xp = summary.xp_points || (summary.total_events || 0) * 10;
-  const streakDays = streakData?.streak_days || summary.streak_days || summary.learning_streak || student.streak_days || 0;
-  const engagementScore = summary.engagement?.engagement_score ?? risk.engagement_score;
+
+  const streakDays =
+    streakData?.streak_days ||
+    summary.streak_days ||
+    summary.learning_streak ||
+    student.streak_days ||
+    0;
+
+  const engagementScore =
+    summary.engagement?.engagement_score ??
+    risk.engagement_score ??
+    0;
+
   const dashboardRecommendations = summary.ai_recommendations || [];
+
   const displayedRecommendations = recommendations.length
     ? recommendations.slice(0, 3)
     : dashboardRecommendations.length
     ? dashboardRecommendations.slice(0, 3)
     : risk.ai_insights.slice(0, 3);
+
   const quizTrend = quizPerformance?.trend || summary.quiz_performance?.trend || [];
   const engagementTrend = summary.engagement?.trend || [];
 
@@ -298,39 +374,39 @@ function DashboardPage() {
       title: "Mathematics",
       description: "KS3, GCSE, A-Level, Further Maths and adult preparation.",
       path: "/learn/mathematics",
-      color: "bg-blue-50 text-blue-700"
+      color: "bg-blue-50 text-blue-700",
     },
     {
       title: "English Language",
       description: "Comprehension, writing, grammar, vocabulary and exam technique.",
       path: "/learn/english-language",
-      color: "bg-green-50 text-green-700"
+      color: "bg-green-50 text-green-700",
     },
     {
       title: "English Literature",
       description: "Poetry, Shakespeare, modern texts, quotations and essays.",
       path: "/learn/english-literature",
-      color: "bg-purple-50 text-purple-700"
+      color: "bg-purple-50 text-purple-700",
     },
     {
       title: "Computer Science",
       description: "Programming, SQL, algorithms and practical problem solving.",
       path: "/courses",
-      color: "bg-slate-100 text-slate-700"
+      color: "bg-slate-100 text-slate-700",
     },
     {
       title: "Cyber Security",
       description: "Threats, encryption, networking and secure systems.",
       path: "/courses",
-      color: "bg-rose-50 text-rose-700"
-    }
+      color: "bg-rose-50 text-rose-700",
+    },
   ];
 
   const recentActivity = [
     `${completedLessons} lessons completed`,
     `${summary.total_events || 0} learning events recorded`,
     `Risk level: ${risk.risk_level}`,
-    `Engagement score: ${risk.engagement_score}%`
+    `Engagement score: ${risk.engagement_score}%`,
   ];
 
   return (
@@ -341,7 +417,6 @@ function DashboardPage() {
       streakDays={streakDays}
     >
       <div className="space-y-8">
-
         <section className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white rounded-2xl p-8 shadow">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
@@ -414,7 +489,7 @@ function DashboardPage() {
             subtitle="Daily learning events over the last two weeks."
             emptyText="Complete a lesson, quiz, or flow session to build engagement data."
           >
-            {engagementTrend.some(item => item.events > 0) ? (
+            {engagementTrend.some((item) => item.events > 0) ? (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={engagementTrend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -604,7 +679,6 @@ function DashboardPage() {
             </div>
           </div>
         </section>
-
       </div>
     </StudentShell>
   );
@@ -616,7 +690,7 @@ function SummaryCard({
   title,
   value,
   detail,
-  color
+  color,
 }) {
   return (
     <div className="bg-white rounded-2xl shadow p-6">
@@ -644,7 +718,7 @@ function ChartPanel({
   title,
   subtitle,
   emptyText,
-  children
+  children,
 }) {
   const hasChart = Boolean(children);
 
