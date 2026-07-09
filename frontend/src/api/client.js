@@ -1,6 +1,5 @@
 import API_BASE_URL from "./config";
 
-
 export function backendConnectionMessage(error) {
   const baseUrl = API_BASE_URL || "the current frontend origin";
   const detail = error?.message ? ` (${error.message})` : "";
@@ -8,11 +7,9 @@ export function backendConnectionMessage(error) {
   return `Backend not running, wrong VITE_API_BASE_URL, CORS issue, or network error. Current API base: ${baseUrl}.${detail}`;
 }
 
-
 export function getToken() {
   return localStorage.getItem("token");
 }
-
 
 export function clearAuthStorage() {
   localStorage.removeItem("token");
@@ -22,19 +19,19 @@ export function clearAuthStorage() {
   localStorage.removeItem("email");
 }
 
-
 export function saveAuthData(data) {
   if (!data?.access_token || !data?.user) {
     throw new Error("Invalid login response from backend.");
   }
 
-  localStorage.setItem("token", data.access_token);
-  localStorage.setItem("user", JSON.stringify(data.user));
-  localStorage.setItem("role", data.user.role);
-  localStorage.setItem("full_name", data.user.full_name);
-  localStorage.setItem("email", data.user.email);
-}
+  const user = data.user;
 
+  localStorage.setItem("token", data.access_token);
+  localStorage.setItem("user", JSON.stringify(user));
+  localStorage.setItem("role", user.role || "");
+  localStorage.setItem("full_name", user.full_name || "");
+  localStorage.setItem("email", user.email || "");
+}
 
 export function getStoredUser() {
   const user = localStorage.getItem("user");
@@ -51,19 +48,23 @@ export function getStoredUser() {
   }
 }
 
-
 export function getDashboardPath(role) {
-  if (role === "admin") {
+  const normalisedRole = String(role || "").toLowerCase().trim();
+
+  if (normalisedRole === "admin") {
     return "/admin";
   }
 
-  if (role === "teacher") {
+  if (normalisedRole === "teacher") {
     return "/teacher";
   }
 
-  return "/dashboard";
-}
+  if (normalisedRole === "student") {
+    return "/dashboard";
+  }
 
+  return "/login";
+}
 
 export async function apiRequest(endpoint, options = {}) {
   const token = getToken();
@@ -105,7 +106,6 @@ export async function apiRequest(endpoint, options = {}) {
   return response;
 }
 
-
 export async function apiJson(endpoint, options = {}) {
   const response = await apiRequest(endpoint, options);
 
@@ -129,9 +129,8 @@ export async function apiJson(endpoint, options = {}) {
   };
 }
 
-
 export async function loginRequest(email, password) {
-  const { data } = await apiJson("/account/login", {
+  const result = await apiJson("/account/login", {
     method: "POST",
     body: JSON.stringify({
       email: email.trim(),
@@ -139,11 +138,24 @@ export async function loginRequest(email, password) {
     }),
   });
 
-  saveAuthData(data);
+  if (!result) {
+    throw new Error("Login failed. No response from backend.");
+  }
 
-  return data;
+  saveAuthData(result.data);
+
+  return result.data;
 }
 
+export async function getCurrentAccount() {
+  const result = await apiJson("/account/me");
+
+  if (!result) {
+    return null;
+  }
+
+  return result.data;
+}
 
 export async function logout() {
   clearAuthStorage();

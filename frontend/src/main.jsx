@@ -1,11 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import "@fontsource/inter";
 import "./index.css";
@@ -69,15 +64,11 @@ import AdminReportsPage from "./pages/AdminReportsPage";
 import AdminAuditLogsPage from "./pages/AdminAuditLogsPage";
 import AdminAdvancedAnalyticsPage from "./pages/AdminAdvancedAnalyticsPage";
 
-
 function ProtectedPage({ allowedRoles, children }) {
-  return (
-    <RoleRoute allowedRoles={allowedRoles}>
-      {children}
-    </RoleRoute>
-  );
+  return <RoleRoute allowedRoles={allowedRoles}>{children}</RoleRoute>;
 }
 
+const allRoles = ["student", "teacher", "admin"];
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -89,203 +80,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          <Route
-            path="/account-settings"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <AccountSettingsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/chatbot"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <ChatbotPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/ai-tutor"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <AITutorPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/learn/mathematics"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <MathematicsLearningPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/learn/english-language"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <EnglishLanguageLearningPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/learn/english-literature"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <EnglishLiteratureLearningPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/education/analytics"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <EducationAnalyticsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/study-planner"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <StudyPlannerPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/quiz-generator"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <QuizGeneratorPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/datasets"
-            element={
-              <ProtectedPage allowedRoles={["admin", "teacher"]}>
-                <DatasetsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/ml/engagement"
-            element={
-              <ProtectedPage allowedRoles={["admin", "teacher"]}>
-                <EngagementPredictionPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/recommendations"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <RecommendationsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/ml/analytics"
-            element={
-              <ProtectedPage allowedRoles={["admin", "teacher"]}>
-                <MLAnalyticsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/ml/student-risk"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <StudentRiskPredictionPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/cognitive-risk"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <CognitiveRiskPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/creativity-lab"
-            element={
-              <ProtectedPage allowedRoles={["student"]}>
-                <CreativityAssessmentPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/creativity-lab/results"
-            element={
-              <ProtectedPage allowedRoles={["student"]}>
-                <CreativityResultsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/learning-dna"
-            element={
-              <ProtectedPage allowedRoles={["student"]}>
-                <LearningDNAPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/learning-dna/results"
-            element={
-              <ProtectedPage allowedRoles={["student"]}>
-                <LearningDNAResultsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/flow-state"
-            element={
-              <ProtectedPage allowedRoles={["student"]}>
-                <FlowStatePage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/explainable-ai"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <ExplainableAIDashboard />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
-            path="/weak-topics"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <WeakTopicsPage />
-              </ProtectedPage>
-            }
-          />
+          {/* Student route aliases */}
+          <Route path="/student" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/student/dashboard" element={<Navigate to="/dashboard" replace />} />
 
           <Route
             path="/dashboard"
@@ -342,15 +139,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           />
 
           <Route
-            path="/learning-path"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <LearningPathPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
             path="/profile"
             element={
               <ProtectedPage allowedRoles={["student"]}>
@@ -378,15 +166,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           />
 
           <Route
-            path="/notifications"
-            element={
-              <ProtectedPage allowedRoles={["student", "teacher", "admin"]}>
-                <NotificationsPage />
-              </ProtectedPage>
-            }
-          />
-
-          <Route
             path="/feedback"
             element={
               <ProtectedPage allowedRoles={["student"]}>
@@ -400,6 +179,222 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             element={
               <ProtectedPage allowedRoles={["student"]}>
                 <StudentFeedbackPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/account-settings"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <AccountSettingsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/chatbot"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <ChatbotPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/ai-tutor"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <AITutorPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/learn/mathematics"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <MathematicsLearningPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/learn/english-language"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <EnglishLanguageLearningPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/learn/english-literature"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <EnglishLiteratureLearningPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/education/analytics"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <EducationAnalyticsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/study-planner"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <StudyPlannerPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/quiz-generator"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <QuizGeneratorPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/recommendations"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <RecommendationsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/ml/student-risk"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <StudentRiskPredictionPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/cognitive-risk"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <CognitiveRiskPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/learning-path"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <LearningPathPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <NotificationsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/explainable-ai"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <ExplainableAIDashboard />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/weak-topics"
+            element={
+              <ProtectedPage allowedRoles={allRoles}>
+                <WeakTopicsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/creativity-lab"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <CreativityAssessmentPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/creativity-lab/results"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <CreativityResultsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/learning-dna"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <LearningDNAPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/learning-dna/results"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <LearningDNAResultsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/flow-state"
+            element={
+              <ProtectedPage allowedRoles={["student"]}>
+                <FlowStatePage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/datasets"
+            element={
+              <ProtectedPage allowedRoles={["admin", "teacher"]}>
+                <DatasetsPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/ml/engagement"
+            element={
+              <ProtectedPage allowedRoles={["admin", "teacher"]}>
+                <EngagementPredictionPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
+            path="/ml/analytics"
+            element={
+              <ProtectedPage allowedRoles={["admin", "teacher"]}>
+                <MLAnalyticsPage />
               </ProtectedPage>
             }
           />
